@@ -50,6 +50,18 @@ public abstract class AbstractClassHasRequiredTypes
 							projectClasses,
 							new HashSet<>(),
 							taggedClass.getName());
+			if (path == null && getFirstPrecedingTestInstance() instanceof
+					gradingTools.comp690f26.assignment1.TraceFilesProvided files) {
+				var processor = files.getBridgeDemoProcessor().getProcessor();
+				if (processor instanceof eduAI.trace.processors.GenericTracesFileProcessor generic) {
+					for (var record : generic.getTraceRecords().values()) {
+						if (!"server_handle_fetched".equals(record.getTraceLine().getEventName())) continue;
+						String dump = record.getTraceLine().getAuxiliaryData().get("serverHandle");
+						path = runtimeRequiredTypePath(dump, taggedClass, requiredType);
+						if (path != null) break;
+					}
+				}
+			}
 			if (path == null) {
 				missingTypes.add(requiredType.getName());
 			} else {
@@ -71,6 +83,18 @@ public abstract class AbstractClassHasRequiredTypes
 			return fail(message);
 		}
 		return pass();
+	}
+
+	static String runtimeRequiredTypePath(String dump, Class<?> root, Class<?> required) {
+		for (var occurrence : new eduAI.trace.processors.ReflectiveValueCollector().collectRuntimeTypes(dump)) {
+			var types = occurrence.typesOnPath();
+			if (!types.contains(root.getName()) || occurrence.value().equals(root.getName())) continue;
+			try {
+				Class<?> actual = Class.forName(occurrence.value(), false, root.getClassLoader());
+				if (required.isAssignableFrom(actual)) return "runtime:" + occurrence.path();
+			} catch (ClassNotFoundException | LinkageError ignored) { }
+		}
+		return null;
 	}
 
 	private String findRequiredTypePath(

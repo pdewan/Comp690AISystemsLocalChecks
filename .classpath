@@ -6,8 +6,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="G:/My Drive/Java/lib/graders/GraderBasicsLib.jar"/>
-	<classpathentry kind="lib" path="G:/My Drive/Java/lib/graders/CompleteGraderLibs.jar"/>
-	<classpathentry kind="lib" path="G:/My Drive/Comp690-AI-Systems-Shared/Downloads/ai_libs.jar"/>
+	<classpathentry kind="lib" path="lib/ai_libs.jar"/>
+	<classpathentry kind="lib" path="lib/GraderBasicsLib.jar"/>
+	<classpathentry kind="lib" path="lib/CompleteGraderLibs.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
