@@ -20,7 +20,7 @@ public class OllamaPartialResponseCallbackInvoked extends AbstractProviderStream
 				};
 	}
 
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p) {
+	protected TraceCheckResult check(TraceFilesProcessor p) {
 		return p.checkPartialResponseCallbacksInvoked(provider());
 	}
 }

@@ -52,14 +52,12 @@ public abstract class AbstractClassHasRequiredTypes
 							taggedClass.getName());
 			if (path == null && getFirstPrecedingTestInstance() instanceof
 					gradingTools.comp690f26.assignment1.TraceFilesProvided files) {
-				var processor = files.getBridgeDemoProcessor().getProcessor();
-				if (processor instanceof eduAI.trace.processors.GenericTracesFileProcessor generic) {
-					for (var record : generic.getTraceRecords().values()) {
-						if (!"server_handle_fetched".equals(record.getTraceLine().getEventName())) continue;
-						String dump = record.getTraceLine().getAuxiliaryData().get("serverHandle");
-						path = runtimeRequiredTypePath(dump, taggedClass, requiredType);
-						if (path != null) break;
-					}
+				var processor = files.getTraceFilesProcessor();
+				for (var record : processor.getTraceRecords().values()) {
+					if (!"server_handle_fetched".equals(record.getTraceLine().getEventName())) continue;
+					String dump = record.getTraceLine().getAuxiliaryData().get("serverHandle");
+					path = runtimeRequiredTypePath(dump, taggedClass, requiredType);
+					if (path != null) break;
 				}
 			}
 			if (path == null) {

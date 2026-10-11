@@ -12,5 +12,5 @@ public class GenericResponseStructuresMatchAcrossProviders extends AbstractTrace
 		GeminiResponseMatchesGenericResponse.class,
 		OllamaResponseMatchesGenericResponse.class
 	};}
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p){return p.checkProviderIndependentNonStreamingResponsesMatchAcrossProviders();}
+	protected TraceCheckResult check(TraceFilesProcessor p){return p.checkProviderIndependentNonStreamingResponsesMatchAcrossProviders();}
 }

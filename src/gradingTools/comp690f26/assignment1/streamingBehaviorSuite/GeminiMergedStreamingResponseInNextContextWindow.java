@@ -21,7 +21,7 @@ public class GeminiMergedStreamingResponseInNextContextWindow extends AbstractPr
 				GeminiPartialResponseCallbackInvoked.class};
 	}
 
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p) {
+	protected TraceCheckResult check(TraceFilesProcessor p) {
 		return p.checkStreamingChunksReflectedInNextContextWindow(provider());
 	}
 }

@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1.contextHistorySuite;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.PrecedingTestUtils;
@@ -17,7 +17,7 @@ public class GeminiPreviousImagesRetained
 		return PrecedingTestUtils.add(super.additionalPrecedingTests(),
 				GeminiImageMatchesGenericImage.class);
 	}
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor processor) {
+	protected TraceCheckResult check(TraceFilesProcessor processor) {
 		return processor.checkPreviousImagesRetained(provider());
 	}
 }

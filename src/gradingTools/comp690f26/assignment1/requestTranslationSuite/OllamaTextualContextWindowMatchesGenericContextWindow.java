@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1.requestTranslationSuite;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.commonInterfacesSuite.NativePromptMessageAdapters;
@@ -24,7 +24,7 @@ public class OllamaTextualContextWindowMatchesGenericContextWindow extends Abstr
 				NativePromptMessageAdapters.class);
 	}
 
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p) {
+	protected TraceCheckResult check(TraceFilesProcessor p) {
 		return p.checkProviderGenericTextualContextWindowMatches(provider());
 	}
 }

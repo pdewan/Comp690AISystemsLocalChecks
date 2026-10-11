@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1.tracedClassesSuite;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -22,12 +22,12 @@ public abstract class AbstractClassFoundInTrace
 	@Override
 	public TestCaseResult test(Project aProject, boolean anInteractive)
 			throws NotAutomatableException, NotGradableException {
-		BridgeDemoTraceFilesProcessor bridgeDemoProcessor =
+		TraceFilesProcessor traceFilesProcessor =
 				((TraceFilesProvided) getFirstPrecedingTestInstance())
-						.getBridgeDemoProcessor();
+						.getTraceFilesProcessor();
 		String tag = getTag();
 		TraceCheckResult traceCheckResult =
-				bridgeDemoProcessor.checkClassExistsForTag(tag);
+				traceFilesProcessor.checkClassExistsForTag(tag);
 		for (String message : traceCheckResult.level3Messages()) {
 			System.out.println(message);
 		}

@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1.providerIndependentTypeIntegritySuite;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.RequestsTraced;
@@ -14,7 +14,7 @@ public class OllamaParameterStoreTypeIntegrity
 	protected Class<?>[] additionalPrecedingTests() {
 		return new Class<?>[]{RequestsTraced.class};
 	}
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor processor) {
+	protected TraceCheckResult check(TraceFilesProcessor processor) {
 		return processor.checkProviderIndependentParameterStoreTypes(provider());
 	}
 }

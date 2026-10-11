@@ -3,4 +3,4 @@ import util.annotations.Explanation;
 
 import eduAI.trace.processors.*;
 @Explanation("After text translation, tracks earlier system instructions; gates expected-content checks.")
-public class GeminiPreviousSystemPromptsRetained extends AbstractProviderContextHistoryCheck { protected String provider(){return TraceProviderNames.GEMINI;} protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p){return p.checkPreviousSystemPromptsRetained(provider());} }
+public class GeminiPreviousSystemPromptsRetained extends AbstractProviderContextHistoryCheck { protected String provider(){return TraceProviderNames.GEMINI;} protected TraceCheckResult check(TraceFilesProcessor p){return p.checkPreviousSystemPromptsRetained(provider());} }

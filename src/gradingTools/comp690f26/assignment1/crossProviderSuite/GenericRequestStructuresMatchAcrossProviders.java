@@ -16,5 +16,5 @@ public class GenericRequestStructuresMatchAcrossProviders extends AbstractTraceP
 		GeminiParametersMatchGenericParameters.class,
 		OllamaParametersMatchGenericParameters.class
 	};}
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p){return p.checkProviderIndependentNonStreamingRequestsMatchAcrossProviders();}
+	protected TraceCheckResult check(TraceFilesProcessor p){return p.checkProviderIndependentNonStreamingRequestsMatchAcrossProviders();}
 }

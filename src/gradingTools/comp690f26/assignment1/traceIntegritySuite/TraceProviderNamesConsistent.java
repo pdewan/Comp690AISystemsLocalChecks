@@ -11,7 +11,7 @@ public class TraceProviderNamesConsistent extends AbstractTraceProcessorCheck {
 				ServerHandleFactoriesFetchedTraced.class};
 	}
 
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p) { return p.checkProviderNamesConsistent(); }
+	protected TraceCheckResult check(TraceFilesProcessor p) { return p.checkProviderNamesConsistent(); }
 
 	@Override
 	protected String failureGuidance() {

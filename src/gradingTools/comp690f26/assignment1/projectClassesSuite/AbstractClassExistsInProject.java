@@ -3,7 +3,7 @@ import util.annotations.Explanation;
 
 import java.util.List;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.BasicProjectIntrospection;
@@ -49,11 +49,11 @@ public abstract class AbstractClassExistsInProject
 	@Override
 	public TestCaseResult test(Project aProject, boolean anInteractive)
 			throws NotAutomatableException, NotGradableException {
-		BridgeDemoTraceFilesProcessor bridgeDemoProcessor =
+		TraceFilesProcessor traceFilesProcessor =
 				((TraceFilesProvided) getFirstPrecedingTestInstance())
-						.getBridgeDemoProcessor();
+						.getTraceFilesProcessor();
 		String tag = getTag();
-		List<String> classNames = bridgeDemoProcessor.classesForTag(tag);
+		List<String> classNames = traceFilesProcessor.classesForTag(tag);
 		tracedClasses.clear();
 		tracedClassNames.clear();
 		tracedClassNames.addAll(classNames);

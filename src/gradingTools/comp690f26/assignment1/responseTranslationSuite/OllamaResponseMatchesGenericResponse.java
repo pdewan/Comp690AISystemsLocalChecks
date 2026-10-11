@@ -2,7 +2,7 @@ package gradingTools.comp690f26.assignment1.responseTranslationSuite;
 
 import util.annotations.Explanation;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.PrecedingTestUtils;
@@ -17,7 +17,7 @@ public class OllamaResponseMatchesGenericResponse
 		return TraceProviderNames.OLLAMA;
 	}
 
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor aProcessor) {
+	protected TraceCheckResult check(TraceFilesProcessor aProcessor) {
 		return aProcessor.checkProviderGenericResponseMatches(provider());
 	}
 

@@ -3,4 +3,4 @@ import util.annotations.Explanation;
 
 import eduAI.trace.processors.*;
 @Explanation("After text translation, verifies history is reduced at expected turns; gates expected content.")
-public class OllamaExpectedContextWindowCompaction extends AbstractProviderContextHistoryCheck { protected String provider(){return TraceProviderNames.OLLAMA;} protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p){return p.checkExpectedContextWindowCompactions(provider());} }
+public class OllamaExpectedContextWindowCompaction extends AbstractProviderContextHistoryCheck { protected String provider(){return TraceProviderNames.OLLAMA;} protected TraceCheckResult check(TraceFilesProcessor p){return p.checkExpectedContextWindowCompactions(provider());} }

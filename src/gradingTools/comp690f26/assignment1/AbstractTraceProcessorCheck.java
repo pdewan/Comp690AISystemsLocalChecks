@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -15,7 +15,7 @@ import util.trace.Tracer;
 public abstract class AbstractTraceProcessorCheck
 		extends PassFailJUnitTestCase {
 	protected abstract TraceCheckResult check(
-			BridgeDemoTraceFilesProcessor aProcessor);
+			TraceFilesProcessor aProcessor);
 
 	protected String failureGuidance() {
 		Explanation explanation =
@@ -46,7 +46,7 @@ public abstract class AbstractTraceProcessorCheck
 		TraceFilesProvided traceFilesProvided =
 				(TraceFilesProvided) getFirstPrecedingTestInstance();
 		TraceCheckResult result = check(
-				traceFilesProvided.getBridgeDemoProcessor());
+				traceFilesProvided.getTraceFilesProcessor());
 		for (String message : result.level3Messages()) {
 			System.out.println(message);
 		}

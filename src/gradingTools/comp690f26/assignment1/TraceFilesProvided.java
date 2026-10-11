@@ -2,7 +2,10 @@ package gradingTools.comp690f26.assignment1;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import java.nio.file.Path;
+import eduAI.trace.processors.BridgeDemoTraceInformation;
+import eduAI.trace.processors.NativeTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceFilesProcessorError;
 import grader.basics.junit.NotAutomatableException;
@@ -17,7 +20,7 @@ import util.annotations.MaxValue;
 @MaxValue(0)
 public class TraceFilesProvided extends PassFailJUnitTestCase {
 
-	BridgeDemoTraceFilesProcessor bridgeDemoProcessor;
+	private TraceFilesProcessor traceFilesProcessor;
 	static String traceDirectory = ".";
 	 
 	public static void setTraceDirectory(String aTraceDirectory) {
@@ -26,9 +29,12 @@ public class TraceFilesProvided extends PassFailJUnitTestCase {
 	
 	@Override
 	public TestCaseResult test(Project aProject, boolean arg1) throws NotAutomatableException, NotGradableException {
-		bridgeDemoProcessor = new BridgeDemoTraceFilesProcessor();
-		bridgeDemoProcessor.setTraceDirectory(traceDirectory);
-		TraceCheckResult traceCheckResult = bridgeDemoProcessor.checkTraceFilesExist();
+		BridgeDemoTraceInformation information = new BridgeDemoTraceInformation(
+				traceDirectory == null || traceDirectory.isBlank()
+						? Path.of(".") : Path.of(traceDirectory.trim()));
+		traceFilesProcessor = new NativeTraceFilesProcessor(
+				information.traceFiles(), information.expectedInputs());
+		TraceCheckResult traceCheckResult = traceFilesProcessor.checkTraceFilesExist();
 		
 		List<TraceFilesProcessorError> errors = traceCheckResult.errors();
 		if (errors == null) {
@@ -53,8 +59,8 @@ public class TraceFilesProvided extends PassFailJUnitTestCase {
 		}
 		return pass();
 	}
-	public BridgeDemoTraceFilesProcessor getBridgeDemoProcessor() {
-		return bridgeDemoProcessor;
+	public TraceFilesProcessor getTraceFilesProcessor() {
+		return traceFilesProcessor;
 	}
 	
 	

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import eduAI.trace.lib.LibTraceEvent;
 import eduAI.trace.lib.StreamingMode;
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import gradingTools.comp690f26.assignment1.AbstractTraceProcessorCheck;
 
@@ -45,7 +45,7 @@ public abstract class AbstractTraceEventTraced
 
 	@Override
 	protected TraceCheckResult check(
-			BridgeDemoTraceFilesProcessor aProcessor) {
+			TraceFilesProcessor aProcessor) {
 		return aProcessor.checkTraceEventExists(
 				traceEvent().name().toLowerCase(),
 				expectedProviderModes());

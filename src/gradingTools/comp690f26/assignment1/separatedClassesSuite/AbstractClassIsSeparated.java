@@ -2,7 +2,7 @@ package gradingTools.comp690f26.assignment1.separatedClassesSuite;
 
 import java.util.List;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -19,18 +19,18 @@ public abstract class AbstractClassIsSeparated
 	@Override
 	public TestCaseResult test(Project aProject, boolean anInteractive)
 			throws NotAutomatableException, NotGradableException {
-		BridgeDemoTraceFilesProcessor bridgeDemoProcessor =
+		TraceFilesProcessor traceFilesProcessor =
 				((TraceFilesProvided) getFirstPrecedingTestInstance())
-						.getBridgeDemoProcessor();
+						.getTraceFilesProcessor();
 		String tag = getTag();
-		for (String className : bridgeDemoProcessor.classesForTag(tag)) {
+		for (String className : traceFilesProcessor.classesForTag(tag)) {
 			TraceCheckResult traceCheckResult =
-					bridgeDemoProcessor.checkClassHasMultipleTags(className);
+					traceFilesProcessor.checkClassHasMultipleTags(className);
 			for (String message : traceCheckResult.level3Messages()) {
 				System.out.println(message);
 			}
 
-			List<String> tags = bridgeDemoProcessor.tagsForClass(className);
+			List<String> tags = traceFilesProcessor.tagsForClass(className);
 			if (tags.size() > 1) {
 				String message =
 						"Expected class to have only one role in trace: "

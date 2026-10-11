@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1.requestTranslationSuite;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.commonInterfacesSuite.NativePromptMessageAdapters;
@@ -19,7 +19,7 @@ public class GeminiImageMatchesGenericImage extends AbstractProviderRequestCheck
 				NativePromptMessageAdapters.class,
 				GenericRequestStructuresMatchAcrossProviders.class);
 	}
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor aProcessor) {
+	protected TraceCheckResult check(TraceFilesProcessor aProcessor) {
 		return aProcessor.checkProviderGenericImagesMatch(provider());
 	}
 }

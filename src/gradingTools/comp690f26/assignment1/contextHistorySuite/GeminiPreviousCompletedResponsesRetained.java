@@ -3,4 +3,4 @@ import util.annotations.Explanation;
 
 import eduAI.trace.processors.*;
 @Explanation("After text translation, checks earlier completed answers survive until permitted compaction.")
-public class GeminiPreviousCompletedResponsesRetained extends AbstractProviderContextHistoryCheck { protected String provider(){return TraceProviderNames.GEMINI;} protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p){return p.checkPreviousCompletedResponsesRetained(provider());} }
+public class GeminiPreviousCompletedResponsesRetained extends AbstractProviderContextHistoryCheck { protected String provider(){return TraceProviderNames.GEMINI;} protected TraceCheckResult check(TraceFilesProcessor p){return p.checkPreviousCompletedResponsesRetained(provider());} }

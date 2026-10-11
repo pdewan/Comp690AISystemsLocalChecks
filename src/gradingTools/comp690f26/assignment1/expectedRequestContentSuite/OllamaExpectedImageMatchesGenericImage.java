@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1.expectedRequestContentSuite;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.requestTranslationSuite.OllamaImageMatchesGenericImage;
@@ -17,7 +17,7 @@ public class OllamaExpectedImageMatchesGenericImage
 		return PrecedingTestUtils.add(super.additionalPrecedingTests(),
 				OllamaImageMatchesGenericImage.class);
 	}
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor aProcessor) {
+	protected TraceCheckResult check(TraceFilesProcessor aProcessor) {
 		return aProcessor.checkExpectedGenericImagesMatch(provider());
 	}
 }

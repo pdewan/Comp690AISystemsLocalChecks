@@ -19,7 +19,7 @@ public class OllamaMergedStreamingResponseInNextContextWindow extends AbstractPr
 				StreamingChunksMergedTraced.class, OllamaPartialResponseCallbackInvoked.class, };
 	}
 
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor p) {
+	protected TraceCheckResult check(TraceFilesProcessor p) {
 		return p.checkStreamingChunksReflectedInNextContextWindow(provider());
 	}
 }

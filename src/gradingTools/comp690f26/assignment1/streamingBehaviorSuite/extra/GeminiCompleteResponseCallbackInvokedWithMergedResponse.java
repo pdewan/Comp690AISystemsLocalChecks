@@ -1,6 +1,6 @@
 package gradingTools.comp690f26.assignment1.streamingBehaviorSuite.extra;
 
-import eduAI.trace.processors.BridgeDemoTraceFilesProcessor;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.streamingBehaviorSuite.AbstractProviderStreamingCheck;
@@ -16,7 +16,7 @@ public class GeminiCompleteResponseCallbackInvokedWithMergedResponse
 		return new Class<?>[]{CompleteResponseCallbacksTraced.class,
 			GeminiPartialResponseCallbackInvoked.class	};
 	}
-	protected TraceCheckResult check(BridgeDemoTraceFilesProcessor processor) {
+	protected TraceCheckResult check(TraceFilesProcessor processor) {
 		return processor.checkCompleteResponseCallbacksInvoked(provider());
 	}
 }
