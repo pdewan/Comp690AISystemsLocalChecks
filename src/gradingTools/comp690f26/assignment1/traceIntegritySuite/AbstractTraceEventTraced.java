@@ -36,7 +36,7 @@ public abstract class AbstractTraceEventTraced
 	protected String shortFailureMessage(TraceCheckResult aResult) {
 		return "Required "
 				+ traceEvent().name().toLowerCase()
-				+ " trace event was not found. See trace output for details.";
+				+ " trace is missing or has invalid arguments. See trace output for details.";
 	}
 
 	protected Map<String, List<StreamingMode>> expectedProviderModes() {

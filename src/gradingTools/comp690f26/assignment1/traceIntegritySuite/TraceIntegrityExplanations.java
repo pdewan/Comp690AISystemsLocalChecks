@@ -80,9 +80,10 @@ public final class TraceIntegrityExplanations {
 			""";
 
 	public static final String MESSAGE_TRANSLATED = """
-			Missing message_translated trace. Call LibTraceActions.traceMessageTranslated in
+			Missing or invalid message_translated evidence. Call LibTraceActions.traceMessageTranslated in
 			the provider prompt-message adapter after translating each generic message. Pass
-			the adapter class, generic message, and native message. Example:
+			the adapter class, generic message, and native message. The generic role may be
+			an enum or String. Inspect invalidEvidence for unreadable roles or inconsistent arguments. Example:
 			## lib {message_translated} [...]
 			 providerIndependentMessage=\"...\" providerDependentMessage=\"...\"> ##
 			""";
