@@ -1,5 +1,4 @@
 package gradingTools.comp690f26.assignment1.style;
-import util.annotations.Explanation;
 
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
@@ -7,8 +6,10 @@ import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.basics.sharedTestCase.checkstyle.NamedConstantsRatioCheck;
 import gradingTools.comp690f26.assignment1.A1RequiredClassesDefined;
+import util.annotations.Explanation;
 import util.annotations.IsExtra;
 import util.annotations.MaxValue;
+
 @Explanation("Uses source-analysis ratios to reward named constants over unexplained literals.")
 @MaxValue(1)
 public class A1NamedConstants extends NamedConstantsRatioCheck{

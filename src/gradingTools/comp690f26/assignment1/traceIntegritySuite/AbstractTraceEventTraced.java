@@ -1,16 +1,16 @@
 package gradingTools.comp690f26.assignment1.traceIntegritySuite;
 
+import eduAI.trace.lib.LibTraceEvent;
+import eduAI.trace.lib.StreamingMode;
+import eduAI.trace.processors.TraceCheckResult;
+import eduAI.trace.processors.TraceFilesProcessor;
+import gradingTools.comp690f26.common.AbstractTraceProcessorCheck;
 import java.util.List;
 import java.util.Map;
 
-import eduAI.trace.lib.LibTraceEvent;
-import eduAI.trace.lib.StreamingMode;
-import eduAI.trace.processors.TraceFilesProcessor;
-import eduAI.trace.processors.TraceCheckResult;
-import gradingTools.comp690f26.assignment1.AbstractTraceProcessorCheck;
 
 public abstract class AbstractTraceEventTraced
-		extends AbstractTraceProcessorCheck {
+		extends gradingTools.comp690f26.common.AbstractSessionTraceEventTraced {
 	protected static final String GEMINI = "Gemini";
 	protected static final String OLLAMA = "Ollama";
 	protected static final List<StreamingMode> BOTH_MODES =
@@ -21,6 +21,7 @@ public abstract class AbstractTraceEventTraced
 			List.of(StreamingMode.NON_STREAMING);
 
 	protected abstract LibTraceEvent traceEvent();
+    @Override protected String eventName() { return traceEvent().name().toLowerCase(java.util.Locale.ROOT); }
 
 	@Override
 	protected Class<?>[] additionalPrecedingTests() {
@@ -46,8 +47,17 @@ public abstract class AbstractTraceEventTraced
 	@Override
 	protected TraceCheckResult check(
 			TraceFilesProcessor aProcessor) {
-		return aProcessor.checkTraceEventExists(
-				traceEvent().name().toLowerCase(),
-				expectedProviderModes());
+        var projectClasses=gradingTools.comp690f26.common.EventProjectClasses.check(aProcessor,java.util.Set.of(eventName()));
+        if(!projectClasses.passed()) return projectClasses;
+		var required = gradingTools.comp690f26.files.FilesProvidedSupport.configuration()
+				.checks().traceEventEvidence().select(aProcessor, expectedProviderModes());
+		if (required.isEmpty()) {
+			String message = "No requests exercise the provider/modes required for " + traceEvent();
+			return new TraceCheckResult(List.of(), List.of(message), List.of(message));
+		}
+		return checkEvent(aProcessor, required);
 	}
+    protected TraceCheckResult checkEvent(TraceFilesProcessor processor, Map<String, List<StreamingMode>> required) {
+        return processor.checkTraceEventExists(eventName(), required);
+    }
 }

@@ -1,24 +1,24 @@
 package gradingTools.comp690f26.assignment1;
-import util.annotations.Explanation;
 
-import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
+import eduAI.trace.processors.TraceFilesProcessor;
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
-import gradingTools.comp690f26.assignment1.Assignment1Tags;
-import gradingTools.comp690f26.assignment1.TraceFilesProvided;
-import util.trace.Tracer;
+import gradingTools.comp690f26.files.AdaptiveTraceFilesProvided;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
+import util.trace.Tracer;
+
 @Explanation("Derives the role from handle-fetch evidence; supplies class names for project lookup.")
 @MaxValue(1)
 public class GeminiServerHandleAdapterFoundInTrace extends PassFailJUnitTestCase {
 //	TraceFilesProcessor traceFilesProcessor;
 //	TraceCheckResult traceCheckResult;
 	static final Class[] PRECEDING_TESTS = {
-			TraceFilesProvided.class
+			AdaptiveTraceFilesProvided.class
 	};
 	@Override
 	protected Class[] precedingTests() {
@@ -28,7 +28,7 @@ public class GeminiServerHandleAdapterFoundInTrace extends PassFailJUnitTestCase
 	
 	@Override
 	public TestCaseResult test(Project aProject, boolean arg1) throws NotAutomatableException, NotGradableException {
-		TraceFilesProcessor traceFilesProcessor = ((TraceFilesProvided) this.getFirstPrecedingTestInstance()).getTraceFilesProcessor();
+		TraceFilesProcessor traceFilesProcessor = ((AdaptiveTraceFilesProvided) this.getFirstPrecedingTestInstance()).getTraceFilesProcessor();
 //		traceFilesProcessor = traceFilesProcessor();
 		TraceCheckResult traceCheckResult =
 				traceFilesProcessor.checkClassExistsForTag(

@@ -1,16 +1,17 @@
 package gradingTools.comp690f26.assignment1.projectClassesSuite;
-import util.annotations.Explanation;
 
 import gradingTools.comp690f26.assignment1.Assignment1Tags;
-import gradingTools.comp690f26.assignment1.TraceFilesProvided;
 import gradingTools.comp690f26.assignment1.tracedClassesSuite.GeminiPromptMessageAdapterFoundInTrace;
+import gradingTools.comp690f26.common.AbstractClassExistsInProject;
+import gradingTools.comp690f26.files.AdaptiveTraceFilesProvided;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 
 @Explanation("After role discovery, loads every mapped project class for reflection and the global integrity gate.")
 public class GeminiPromptMessageAdapterExistsInProject
 		extends AbstractClassExistsInProject {
 	private static final Class[] PRECEDING_TESTS = {
-			TraceFilesProvided.class,
+			AdaptiveTraceFilesProvided.class,
 			GeminiPromptMessageAdapterFoundInTrace.class
 	};
 

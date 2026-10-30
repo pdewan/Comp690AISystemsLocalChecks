@@ -1,28 +1,33 @@
 package gradingTools.comp690f26.assignment1.separatedClassesSuite;
-import util.annotations.Explanation;
-import util.annotations.MaxValue;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import util.annotations.Explanation;
+import util.annotations.MaxValue;
 
 @Explanation("After project lookup, rejects classes assigned multiple trace-derived roles.")
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	GeminiServerHandleAdapterIsSeparated.class,
-	OllamaServerHandleAdapterIsSeparated.class,
-	GeminiServerHandleFactoryIsSeparated.class,
-	OllamaServerHandleFactoryIsSeparated.class,
-	GeminiPromptMessageAdapterIsSeparated.class,
-	OllamaPromptMessageAdapterIsSeparated.class,
-	GeminiResponseMessageAdapterIsSeparated.class,
-	OllamaResponseMessageAdapterIsSeparated.class,
-	GeminiParameterAdapterIsSeparated.class,
-	OllamaParameterAdapterIsSeparated.class,
-	GeminiResponseMetadataAdapterIsSeparated.class,
-	OllamaResponseMetadataAdapterIsSeparated.class,
-	GeminiChunkCallbackAdapterIsSeparated.class,
-	OllamaChunkCallbackAdapterIsSeparated.class,
+    ServerHandleFactoryRegistryIsSeparated.class,
+    GenericContextWindowMessageIsSeparated.class,
+    ParameterStoreIsSeparated.class,
+    GeminiServerHandleAdapterIsSeparated.class,
+    OllamaServerHandleAdapterIsSeparated.class,
+    GeminiServerHandleFactoryIsSeparated.class,
+    OllamaServerHandleFactoryIsSeparated.class,
+    GeminiPromptMessageAdapterIsSeparated.class,
+    OllamaPromptMessageAdapterIsSeparated.class,
+    GeminiResponseMessageAdapterIsSeparated.class,
+    OllamaResponseMessageAdapterIsSeparated.class,
+    GeminiParameterAdapterIsSeparated.class,
+    OllamaParameterAdapterIsSeparated.class,
+    GeminiResponseMetadataAdapterIsSeparated.class,
+    OllamaResponseMetadataAdapterIsSeparated.class,
+    GeminiChunkCallbackAdapterIsSeparated.class,
+    OllamaChunkCallbackAdapterIsSeparated.class,
 })
-@MaxValue(70)
+// The framework's suite maximum includes the three individually scored extras:
+// 70 regular points (14 checks) plus 15 extra-credit points (3 checks).
+@MaxValue(85)
 public class A1SeparatedClassesSuite {
 }

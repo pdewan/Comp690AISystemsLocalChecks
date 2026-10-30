@@ -2,10 +2,9 @@ package gradingTools.comp690f26.assignment1;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import org.junit.runners.Suite;
-
 import util.annotations.Explanation;
+
 
 public final class ExplanationLengthTest {
 	public static final int MAX_EXPLANATION_LENGTH = 100;

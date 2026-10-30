@@ -4,6 +4,7 @@ import gradingTools.comp690f26.assignment1.projectClassesSuite.extra.StreamChunk
 import gradingTools.comp690f26.assignment1.projectClassesSuite.extra.StreamChunkMergerFactoryExistsInProject;
 import gradingTools.comp690f26.assignment1.projectClassesSuite.extra.StreamChunkMergerFactoryRegistryExistsInProject;
 
+
 public final class Assignment1ProjectClassTests {
 	private static final Class[] ALL = {
 		GenericContextWindowMessageExistsInProject.class,
@@ -31,7 +32,18 @@ public final class Assignment1ProjectClassTests {
 	private Assignment1ProjectClassTests() {
 	}
 
-	public static Class[] all() {
+	public static boolean isOptional(Class<?> type) {
+        return type == StreamChunkMergerExistsInProject.class
+            || type == StreamChunkMergerFactoryExistsInProject.class
+            || type == StreamChunkMergerFactoryRegistryExistsInProject.class;
+    }
+
+    /** Required roles veto failures; the aggregate rejects unresolved optional roles only when traced. */
+    public static Class<?>[] interfacePrerequisites() {
+        return gradingTools.comp690f26.common.PrecedingTestUtils.add(all(), A1TracedClassesExistInProject.class);
+    }
+
+    public static Class[] all() {
 		return ALL.clone();
 	}
 }

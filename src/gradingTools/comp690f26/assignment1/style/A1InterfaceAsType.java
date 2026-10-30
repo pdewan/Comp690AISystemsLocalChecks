@@ -1,16 +1,16 @@
 package gradingTools.comp690f26.assignment1.style;
-import util.annotations.Explanation;
 
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import gradingTools.basics.sharedTestCase.checkstyle.NamedConstantsRatioCheck;
-import gradingTools.comp690f26.assignment1.A1RequiredClassesDefined;
 import gradingTools.basics.sharedTestCase.checkstyle.VariableHasClassTypeRatioCheck;
-
+import gradingTools.comp690f26.assignment1.A1RequiredClassesDefined;
+import util.annotations.Explanation;
 import util.annotations.IsExtra;
 import util.annotations.MaxValue;
+
 @Explanation("Uses source-analysis ratios to discourage concrete variable types, not runtime value types.")
 @MaxValue(1)
 public class A1InterfaceAsType extends  VariableHasClassTypeRatioCheck{

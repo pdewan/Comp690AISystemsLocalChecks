@@ -1,8 +1,8 @@
 package gradingTools.comp690f26.assignment1.traceIntegritySuite;
-import util.annotations.Explanation;
 
 import eduAI.trace.lib.LibTraceEvent;
-import gradingTools.comp690f26.assignment1.PrecedingTestUtils;
+import gradingTools.comp690f26.common.PrecedingTestUtils;
+import util.annotations.Explanation;
 
 @Explanation(TraceIntegrityExplanations.PARAMETER_TRANSLATED_EXPLANATION)
 public class ParametersTranslatedTraced extends AbstractTraceEventTraced {

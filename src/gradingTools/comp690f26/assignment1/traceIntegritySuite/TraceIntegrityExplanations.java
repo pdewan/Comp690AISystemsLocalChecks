@@ -2,15 +2,16 @@ package gradingTools.comp690f26.assignment1.traceIntegritySuite;
 
 import eduAI.trace.lib.LibTraceEvent;
 
+
 public final class TraceIntegrityExplanations {
 	public static final String PROVIDER_NAMES_CONSISTENT_EXPLANATION =
-			"After factory-fetch and project checks, rejects conflicting provider identities; gates trace checks.";
+			"After factory trace integrity, checks provider identity against bindings and native request types.";
 	public static final String REQUEST_SENT_EXPLANATION =
-			"Requires request dumps for both modes before request-value and history checks.";
+			"Requires message/parameter translation traces, then validates request dumps for dependent checks.";
 	public static final String SERVER_HANDLE_FACTORY_FETCHED_EXPLANATION =
-			"Requires factory/registry lookup evidence to establish provider identity before other trace checks.";
+			"Checks full factory/registry trace integrity, independently of provider identity evidence.";
 	public static final String SERVER_HANDLE_FETCHED_EXPLANATION =
-			"Requires factory-to-handle evidence before inspecting the adapter's native-client field types.";
+			"After factory lookup integrity, requires handle evidence before inspecting native-client fields.";
 	public static final String MESSAGE_TRANSLATED_EXPLANATION =
 			"Requires prompt-adapter evidence; request values are checked separately.";
 	public static final String RESPONSE_TRANSLATED_EXPLANATION =
@@ -18,7 +19,7 @@ public final class TraceIntegrityExplanations {
 	public static final String PARAMETER_TRANSLATED_EXPLANATION =
 			"Requires key, value, adapter, and native-target evidence before parameter comparisons.";
 	public static final String METADATA_TRANSLATED_EXPLANATION =
-			"Requires key, value, adapter, and native-source evidence before metadata comparisons.";
+			"Requires metadata key, value, adapter and native source; response dumps are independent.";
 	public static final String MESSAGE_MERGER_FACTORY_FETCHED_EXPLANATION =
 			"Requires merger-factory lookup evidence; semantic accumulation is checked separately.";
 	public static final String STREAMING_CHUNK_ACCUMULATED_EXPLANATION =
@@ -46,9 +47,10 @@ public final class TraceIntegrityExplanations {
 			"Validates required event evidence, not behavior; gates comparisons after project-class checks.";
 
 	public static final String PROVIDER_NAMES_CONSISTENT = """
-			Provider identity comes only from server_handle_factory_fetched, where it is
-			the actual registry lookup key. The same factory identity must not be associated
-			with different provider keys. Filenames and directories do not identify providers.
+			The provider key in server_handle_factory_fetched must agree with its factory
+			identity. In combined sessions, native SDK types in each request must also
+			identify that provider. Student class names and model names are not used.
+			Registry contents, parameter values and response contents are graded separately.
 			""";
 
 	public static final String REQUEST_SENT = """

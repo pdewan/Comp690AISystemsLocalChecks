@@ -1,18 +1,17 @@
 package gradingTools.comp690f26.assignment1.requestTranslationSuite;
 
-import util.annotations.Explanation;
-import util.annotations.MaxValue;
-import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceProviderNames;
-import gradingTools.comp690f26.assignment1.commonInterfacesSuite.NativeParameterAdapters;
-import gradingTools.comp690f26.assignment1.PrecedingTestUtils;
-import gradingTools.comp690f26.assignment1.traceIntegritySuite.ParametersTranslatedTraced;
 import gradingTools.comp690f26.assignment1.providerIndependentTypeIntegritySuite.OllamaParameterStoreTypeIntegrity;
+import gradingTools.comp690f26.assignment1.traceIntegritySuite.ParametersTranslatedTraced;
+import gradingTools.comp690f26.common.PrecedingTestUtils;
+import util.annotations.Explanation;
 
-@Explanation("After trace/type/interface checks, validates native settings and generic store keys/values.")
-@MaxValue(20)
 
+/** Compares generic parameters with native settings. Missing context fields do not block credit;
+ * incorrect parameter values, missing translations or wrong values fail. */
+@Explanation("Checks native/generic parameters independently of missing request context fields.")
 public class OllamaParametersMatchGenericParameters
 		extends AbstractProviderRequestCheck {
 	protected String provider() {
@@ -27,7 +26,6 @@ public class OllamaParametersMatchGenericParameters
 	protected Class<?>[] additionalPrecedingTests() {
 		return PrecedingTestUtils.add(super.additionalPrecedingTests(),
 			OllamaParameterStoreTypeIntegrity.class,
-			ParametersTranslatedTraced.class,
-			NativeParameterAdapters.class);
+			ParametersTranslatedTraced.class);
 	}
 }

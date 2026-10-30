@@ -1,12 +1,14 @@
 package gradingTools.comp690f26.assignment1.traceIntegritySuite.extra;
-import util.annotations.Explanation;
-import java.util.List;
-import java.util.Map;
+
 import eduAI.trace.lib.LibTraceEvent;
 import eduAI.trace.lib.StreamingMode;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.AbstractTraceEventTraced;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.TraceIntegrityExplanations;
-import gradingTools.comp690f26.assignment1.PrecedingTestUtils;
+import gradingTools.comp690f26.common.PrecedingTestUtils;
+import java.util.List;
+import java.util.Map;
+import util.annotations.Explanation;
+
 @Explanation(TraceIntegrityExplanations.STREAMING_CHUNKS_MERGED_EXPLANATION)
 public class StreamingChunksMergedTraced extends AbstractTraceEventTraced {
 	@Override

@@ -1,29 +1,38 @@
 package gradingTools.comp690f26.assignment1.interfacesSuite;
-import util.annotations.Explanation;
-import util.annotations.MaxValue;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
-import gradingTools.comp690f26.assignment1.projectClassesSuite.AbstractClassExistsInProject;
 import gradingTools.comp690f26.assignment1.projectClassesSuite.Assignment1ProjectClassTests;
+import gradingTools.comp690f26.common.AbstractClassExistsInProject;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import util.annotations.Explanation;
+import util.annotations.MaxValue;
 import util.trace.Tracer;
+
 @MaxValue(5)
-@Explanation("After project lookup, counts most-specific interfaces, including inherited ones.")
+@Explanation("Checks one most-specific interface per required class and per optional class present in traces.")
 public class AllTaggedClassesImplementSingleInterface
 		extends PassFailJUnitTestCase {
+    /** Missing optional merger roles do not veto or scale regular points. Required
+     * roles still veto. The aggregate gate rejects any traced class absent from
+     * the project; present optional classes undergo the same interface checks.
+     * Thus no merger can pass, but a traced nonexistent merger cannot pass. */
+    @Override protected boolean failedTestVetoes(Class type) {
+        return !Assignment1ProjectClassTests.isOptional(type);
+    }
+    @Override protected boolean shouldScaleResult() { return false; }
+
 	@Override
 	protected Class[] precedingTests() {
-		return Assignment1ProjectClassTests.all();
+		return Assignment1ProjectClassTests.interfacePrerequisites();
 	}
 
 	@Override

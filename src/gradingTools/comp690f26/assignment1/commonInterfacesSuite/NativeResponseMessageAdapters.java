@@ -1,19 +1,19 @@
 package gradingTools.comp690f26.assignment1.commonInterfacesSuite;
-import util.annotations.Explanation;
 
-import java.util.List;
-
-import gradingTools.comp690f26.assignment1.TraceFilesProvided;
 import gradingTools.comp690f26.assignment1.projectClassesSuite.GeminiResponseMessageAdapterExistsInProject;
 import gradingTools.comp690f26.assignment1.projectClassesSuite.OllamaResponseMessageAdapterExistsInProject;
+import gradingTools.comp690f26.files.AdaptiveTraceFilesProvided;
+import java.util.List;
+import util.annotations.Explanation;
 import util.annotations.MaxValue;
 
-@Explanation("After project lookup, requires one shared inherited interface; gates response translation.")
+/** Structural credit is independent: shared interfaces pass; disjoint interfaces fail without vetoing value comparisons. */
+@Explanation("Requires one shared inherited interface after project lookup; graded independently of values.")
 @MaxValue(1)
 public class NativeResponseMessageAdapters
 		extends AbstractClassesImplementCommonInterface {
 	private static final Class[] PRECEDING_TESTS = {
-			TraceFilesProvided.class,
+			AdaptiveTraceFilesProvided.class,
 			GeminiResponseMessageAdapterExistsInProject.class,
 			OllamaResponseMessageAdapterExistsInProject.class
 	};

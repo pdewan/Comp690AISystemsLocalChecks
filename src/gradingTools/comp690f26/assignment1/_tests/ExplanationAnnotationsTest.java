@@ -1,5 +1,6 @@
 package gradingTools.comp690f26.assignment1._tests;
 
+import grader.basics.testcase.PassFailJUnitTestCase;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,13 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.junit.runners.Suite;
-
-import grader.basics.testcase.PassFailJUnitTestCase;
-import static gradingTools.comp690f26.assignment1.ExplanationLengthTest.MAX_EXPLANATION_LENGTH;
 import util.annotations.Explanation;
 
+
+import static gradingTools.comp690f26.assignment1.ExplanationLengthTest.MAX_EXPLANATION_LENGTH;
 /** Maintenance test only: do not add to the student grading suites. */
 public final class ExplanationAnnotationsTest {
 	private static final Pattern PACKAGE = Pattern.compile("(?m)^package\\s+([^;]+);");

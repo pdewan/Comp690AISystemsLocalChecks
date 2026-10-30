@@ -1,12 +1,15 @@
 package gradingTools.comp690f26.assignment1.providerIndependentTypeIntegritySuite;
 
-import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceCheckResult;
+import eduAI.trace.processors.TraceFilesProcessor;
 import eduAI.trace.processors.TraceProviderNames;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.ResponsesTranslatedTraced;
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
 
+
+// Type validation remains a zero-point prerequisite when grouped with value comparisons.
+@MaxValue(0)
 @Explanation("Rejects native SDK types on generic response paths before response-value comparisons.")
 public class GeminiResponseTypeIntegrity
 		extends AbstractProviderIndependentTypeIntegrityCheck {

@@ -23,3 +23,15 @@
 hs_err_pid*
 replay_pid*
 /bin/
+
+# Generated trace runs, grading reports, and mutation fixtures (keep locally)
+/build/
+Trace*.txt
+*Trace.txt
+*TraceReport.txt
+Assignment1SuiteResults.txt
+ClassRegistry.csv
+CLIInputOutput.txt
+/correct_filtered/
+/broken_filtered/
+/*_broken/

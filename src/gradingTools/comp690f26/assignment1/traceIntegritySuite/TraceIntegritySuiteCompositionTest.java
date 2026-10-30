@@ -1,17 +1,16 @@
 package gradingTools.comp690f26.assignment1.traceIntegritySuite;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.Map;
-
-import org.junit.runners.Suite;
-
 import eduAI.trace.processors.EssentialTraceEvents;
-import gradingTools.comp690f26.assignment1.projectClassesSuite.AllTracedClassesExistInProject;
+import gradingTools.comp690f26.assignment1.projectClassesSuite.A1TracedClassesExistInProject;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.CompleteResponseCallbacksTraced;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.MessageMergerFactoriesFetchedTraced;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.StreamingChunksAccumulatedTraced;
 import gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.StreamingChunksMergedTraced;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import org.junit.runners.Suite;
+
 
 public final class TraceIntegritySuiteCompositionTest {
 	private static final Map<String, Class<?>> EVENT_CHECKS = Map.ofEntries(
@@ -33,7 +32,11 @@ public final class TraceIntegritySuiteCompositionTest {
 	}
 
 	public static void assertSuiteContainsExactlyRequiredChecks() {
-		Set<String> requiredEvents = EssentialTraceEvents.all();
+		Set<String> requiredEvents = new LinkedHashSet<>();
+		for (var event : eduAI.trace.lib.LibTraceEvent.values()) {
+			String name = event.name().toLowerCase(java.util.Locale.ROOT);
+			if (EssentialTraceEvents.all().contains(name)) requiredEvents.add(name);
+		}
 		if (!EVENT_CHECKS.keySet().equals(requiredEvents)) {
 			Set<String> unmappedEvents = new LinkedHashSet<>(requiredEvents);
 			unmappedEvents.removeAll(EVENT_CHECKS.keySet());
@@ -48,7 +51,6 @@ public final class TraceIntegritySuiteCompositionTest {
 		}
 		Set<Class<?>> requiredChecks = new LinkedHashSet<>(EVENT_CHECKS.values());
 		requiredChecks.add(TraceProviderNamesConsistent.class);
-		requiredChecks.add(AllTracedClassesExistInProject.class);
 		Suite.SuiteClasses suiteClasses =
 				A1TraceIntegritySuite.class.getAnnotation(
 						Suite.SuiteClasses.class);
@@ -82,6 +84,6 @@ public final class TraceIntegritySuiteCompositionTest {
 	public static void main(String[] args) {
 		assertSuiteContainsExactlyRequiredChecks();
 		System.out.println(
-				"A1TraceIntegritySuite contains exactly the required checks");
+				"A1TraceIntegritySuite contains exactly the required library checks");
 	}
 }

@@ -1,12 +1,13 @@
 package gradingTools.comp690f26.assignment1.traceIntegritySuite;
-import util.annotations.Explanation;
+
 import eduAI.trace.lib.LibTraceEvent;
-import gradingTools.comp690f26.assignment1.projectClassesSuite.AllTracedClassesExistInProject;
+import util.annotations.Explanation;
+
 @Explanation(TraceIntegrityExplanations.SERVER_HANDLE_FACTORY_FETCHED_EXPLANATION)
 public class ServerHandleFactoriesFetchedTraced extends AbstractTraceEventTraced {
 	@Override
 	protected Class<?>[] additionalPrecedingTests() {
-		return new Class<?>[]{AllTracedClassesExistInProject.class};
+		return new Class<?>[0];
 	}
 	protected LibTraceEvent traceEvent() { return LibTraceEvent.SERVER_HANDLE_FACTORY_FETCHED; }
 }
