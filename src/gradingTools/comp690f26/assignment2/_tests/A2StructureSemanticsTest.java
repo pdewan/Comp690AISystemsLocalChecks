@@ -1,10 +1,10 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import eduAI.trace.processors.mutations.CLISixCallMutations;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 import java.nio.file.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import eduAI.trace.processors.mutations.CLISixCallMutations;
 
 
 /** Verifies that file structure and content faults are rejected by separate checks. */
@@ -12,8 +12,8 @@ public final class A2StructureSemanticsTest {
     public static void main(String[] args) throws Exception {
         if (args.length != 2) throw new IllegalArgumentException("Supply correct and mutation directories");
         Path correct = Path.of(args[0]), mutations = Path.of(args[1]);
-        F26Assignment2Suite.configureProperties();
-        var io = F26Assignment2Suite.createInteractionsProcessor().process(
+        A2ChecksConfiguration.configureProperties();
+        var io = A2ChecksConfiguration.createInteractionsProcessor().process(
             correct.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
         verify(mutations, io, "expander-instances", CLIArchitectureChecks.Check.FILE_SEPARATION,
             CLIArchitectureChecks.Check.FILE_CONTENTS);

@@ -1,17 +1,18 @@
 package gradingTools.comp690f26.assignment2._tests;
+import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.assignment2.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.properties.AIPropertyNames;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment2.*;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.ObserverRolesSeparated;
 import gradingTools.comp690f26.files.FilesProvidedSupport;
-import java.nio.file.*;
-import java.util.*;
 
 
-import static eduAI.trace.cli.MinimalCLITrace.*;
 
 /** Missing-evidence mutations must fail even when no contradictory value exists.
  * Also proves regular output does not require streaming evidence or prerequisites. */
@@ -19,12 +20,12 @@ public final class A2SemanticEvidenceTest {
     private static int mutations;
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply correct A2 fixture directory");
-        Path directory=Path.of(args[0]); F26Assignment2Suite.configureProperties();
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(directory); processor.processTraceFiles();
+        Path directory=Path.of(args[0]); A2ChecksConfiguration.configureProperties();
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(directory); processor.processTraceFiles();
         var records=new ArrayList<>(processor.getTraceRecords().values());
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME))
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME))
             .interaction().orElseThrow();
-        var policy=F26Assignment2Suite.propertyExpectations();
+        var policy=A2ChecksConfiguration.propertyExpectations();
         var contracts=CLIPropertyCheckerRegistry.fromDescriptors(policy.descriptors());
         for(var rule:List.of(CLIPropertyConsistencyChecks.Check.RESULT_TYPES,CLIPropertyConsistencyChecks.Check.ALTERNATIVES,
                 CLIPropertyConsistencyChecks.Check.STORE,CLIPropertyConsistencyChecks.Check.GETTERS)) {
@@ -40,7 +41,7 @@ public final class A2SemanticEvidenceTest {
         insufficient(CLIPropertyConsistencyChecks.check(CLIPropertyConsistencyChecks.Check.GETTERS,onlyGetters,contracts),"getters without setters");
         var config=FilesProvidedSupport.configuration().checks().commandChecks().orElseThrow();
         var registry=config.traceRules().get();
-        registry.register(CLICommandNames.MESSAGES,new CLIMessagesCommandResultChecker(io,directory,F26Assignment2Suite.attachmentKinds()));
+        registry.register(CLICommandNames.MESSAGES,new CLIMessagesCommandResultChecker(io,directory,A2ChecksConfiguration.attachmentKinds()));
         for(String command:List.of(CLICommandNames.PROPERTY,CLICommandNames.PROMPT)) {
             pass(CLICommandResultChecks.checkTraces(records,config.traceRules().get(),command),"correct "+command);
             reject(CLICommandResultChecks.checkTraces(List.of(),config.traceRules().get(),command),"absent "+command);
@@ -50,8 +51,8 @@ public final class A2SemanticEvidenceTest {
             reject(CLICommandResultChecks.check(List.of(),new CLIMixedIO(List.of()),registry,command),"absent "+command);
         }
         for(var kind:CLIFileExpansionContentsChecks.Kind.values()) {
-            pass(CLIFileExpansionContentsChecks.check(kind,records,io,directory,F26Assignment2Suite.attachmentKinds()),"correct "+kind);
-            reject(CLIFileExpansionContentsChecks.check(kind,records,new CLIMixedIO(List.of()),directory,F26Assignment2Suite.attachmentKinds()),"absent "+kind);
+            pass(CLIFileExpansionContentsChecks.check(kind,records,io,directory,A2ChecksConfiguration.attachmentKinds()),"correct "+kind);
+            reject(CLIFileExpansionContentsChecks.check(kind,records,new CLIMixedIO(List.of()),directory,A2ChecksConfiguration.attachmentKinds()),"absent "+kind);
         }
         for(var rule:List.of(CLIArchitectureChecks.Check.HISTORY,CLIArchitectureChecks.Check.COMMAND_OUTPUT,CLIArchitectureChecks.Check.STREAM_OUTPUT)) {
             pass(CLIArchitectureChecks.check(rule,records,io,directory),"correct "+rule);

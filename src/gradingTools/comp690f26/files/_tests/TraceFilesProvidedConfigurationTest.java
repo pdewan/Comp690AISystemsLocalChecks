@@ -1,4 +1,6 @@
 package gradingTools.comp690f26.files._tests;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
 import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
@@ -48,8 +50,8 @@ public final class TraceFilesProvidedConfigurationTest {
 			configureSuite(F26Assignment1Suite.class);
 			verify(a1, true);
 			verify(a2, false);
-			F26Assignment1Suite.setTraceDirectory(a1.toString());
-			F26Assignment2Suite.setTraceDirectory(a2.toString());
+			A1ChecksConfiguration.setTraceDirectory(a1.toString());
+			A2ChecksConfiguration.setTraceDirectory(a2.toString());
 			configureSuite(F26Assignment1Suite.class);
 			if (!FilesProvidedSupport.resolvedDirectory().equals(a1))
 				throw new AssertionError("A1 lost its selected directory when switching suites");
@@ -64,17 +66,16 @@ public final class TraceFilesProvidedConfigurationTest {
 			}
 			System.out.println("TraceFilesProvidedConfigurationTest passed");
 		} finally {
-			F26Assignment1Suite.configureProperties();
+			A1ChecksConfiguration.configureProperties();
 			FilesProvidedSupport.setDirectory(".");
 		}
 	}
 
-	private static void configureSuite(Class<?> suite) throws Throwable {
-		var hooks = new org.junit.runners.model.TestClass(suite)
-				.getAnnotatedMethods(org.junit.BeforeClass.class);
-		if (hooks.size() != 1) throw new AssertionError("Expected one configuration hook for " + suite);
-		hooks.get(0).invokeExplosively(null);
-	}
+	private static void configureSuite(Class<?> suite) {
+        if (suite == F26Assignment1Suite.class) A1ChecksConfiguration.configureProperties();
+        else if (suite == F26Assignment2Suite.class) A2ChecksConfiguration.configureProperties();
+        else throw new IllegalArgumentException("Unsupported suite " + suite);
+    }
 
 	private static void verify(Path directory, boolean expected) throws Exception {
 		FilesProvidedSupport.setDirectory(directory.toString());

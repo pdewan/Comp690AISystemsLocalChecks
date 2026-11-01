@@ -1,11 +1,12 @@
 package gradingTools.comp690f26.assignment1._tests;
-
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment1.interfacesSuite.*;
-import java.nio.file.*;
-import java.util.*;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
 import java.util.regex.*;
+import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.assignment1.interfacesSuite.*;
+import grader.basics.junit.*;
+
+import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
 
 
 /** Generates real trace mutations. Absent optional roles must not reduce regular
@@ -46,7 +47,7 @@ public final class A1OptionalPrerequisitesTest {
             }
         }
         if(changes==0) throw new AssertionError("No mutation applied");
-        F26Assignment1Suite.setTraceDirectory(target.toString());
+        A1ChecksConfiguration.setTraceDirectory(target.toString());
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class);
         for(var type:List.of(AllTaggedClassesImplementSingleInterface.class,TaggedClassPhysicalStructuresUseInterfaces.class)) {

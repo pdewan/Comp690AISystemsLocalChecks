@@ -1,12 +1,12 @@
 package gradingTools.comp690f26.assignment2._tests;
+import java.util.*;
+import java.nio.file.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.trace.TraceLineParser;
 import eduAI.trace.lib.StreamingMode;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import java.nio.file.*;
-import java.util.*;
 import java.util.function.Function;
 
 
@@ -109,7 +109,7 @@ public final class CLISessionChecksTest {
         p.processTraceFiles(); p.setExpectedContentChecks(new eduAI.trace.processors.cli.CLIExpectedContentChecks(expectations(log))); return p;
     }
     private static CLITraceExpectations expectations(List<String> lines) throws Exception {
-        var result = F26Assignment2Suite.createInteractionsProcessor().processLines(lines);
+        var result = A2ChecksConfiguration.createInteractionsProcessor().processLines(lines);
         require(result.succeeded(), "log parsing: " + result.diagnostics());
         return CLITraceExpectations.from(result.interaction().orElseThrow(), directory);
     }

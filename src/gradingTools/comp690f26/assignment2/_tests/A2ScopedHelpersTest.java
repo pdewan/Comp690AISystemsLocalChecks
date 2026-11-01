@@ -1,15 +1,16 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.*;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.*;
-import gradingTools.comp690f26.common.commands.*;
-import java.nio.file.*;
-import java.util.*;
-
 import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.common.commands.*;
+import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import eduAI.trace.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+
 /** Unrelated setter-history defects must preserve full credit; relevant mutations
  * must still fail. Tests pure helpers and fresh grading runs on a restricted
  * session, including unused-provider failed/partial controls. Missing handles
@@ -21,11 +22,11 @@ public final class A2ScopedHelpersTest {
     private static final String MISSING_REQUEST_IDENTITY="No preceding provider/factory identity evidence for request at ";
     public static void main(String[] args)throws Exception {
         if(args.length!=1)throw new IllegalArgumentException("Supply correct A2 directory");
-        var directory=Path.of(args[0]);F26Assignment2Suite.setTraceDirectory(args[0]);
-        var p=F26Assignment2Suite.createTraceFilesProcessor(directory);p.processTraceFiles();
+        var directory=Path.of(args[0]);A2ChecksConfiguration.setTraceDirectory(args[0]);
+        var p=A2ChecksConfiguration.createTraceFilesProcessor(directory);p.processTraceFiles();
         var records=new ArrayList<>(p.getTraceRecords().values());
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
-        var contracts=F26Assignment2Suite.createPropertyCheckers();
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
+        var contracts=A2ChecksConfiguration.createPropertyCheckers();
         var duplicate=new ArrayList<>(records);duplicate.add(records.stream().filter(r->CLITraceEvidence.is(r,Event.HISTORY_WITH_PARAMETERS_UPDATED)).findFirst().orElseThrow());
         for(var rule:List.of(CLIPropertyConsistencyChecks.Check.REGISTRATION,CLIPropertyConsistencyChecks.Check.HANDLER_REUSE,
                 CLIPropertyConsistencyChecks.Check.DISTINCT_HANDLERS,CLIPropertyConsistencyChecks.Check.RESULT_TYPES,
@@ -39,19 +40,19 @@ public final class A2ScopedHelpersTest {
             var event=rule==CLIArchitectureChecks.Check.COMMAND_OUTPUT?Event.COMMAND_OUTPUT_NOTIFIED:Event.STREAM_OUTPUT_NOTIFIED;
             fail(CLIArchitectureChecks.check(rule,records.stream().filter(r->!CLITraceEvidence.is(r,event)).toList(),io,directory),"missing relevant notification "+rule);
         }
-        var kinds=F26Assignment2Suite.attachmentKinds();
+        var kinds=A2ChecksConfiguration.attachmentKinds();
         var files=Files.createTempDirectory(Path.of("build"),"scoped-attachment-check-");
-        Files.copy(directory.resolve(F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT),files.resolve(F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT));
+        Files.copy(directory.resolve(A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT),files.resolve(A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT));
         pass(CLIFileExpansionContentsChecks.check(CLIFileExpansionContentsChecks.Kind.IMAGE,records,io,files,kinds),"image without text file");
         pass(CLITraceExpectations.contentFrom(io,files,CLITraceExpectations.Check.IMAGES,kinds).check(records,null,CLITraceExpectations.Check.IMAGES),"expected image without text file");
         fail(CLIFileExpansionContentsChecks.check(CLIFileExpansionContentsChecks.Kind.TEXT,records,io,files,kinds),"required missing text");
-        Files.copy(directory.resolve(F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT),files.resolve(F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT));
-        Files.delete(files.resolve(F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT));
+        Files.copy(directory.resolve(A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT),files.resolve(A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT));
+        Files.delete(files.resolve(A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT));
         pass(CLIFileExpansionContentsChecks.check(CLIFileExpansionContentsChecks.Kind.TEXT,records,io,files,kinds),"text without image file");
         fail(CLIFileExpansionContentsChecks.check(CLIFileExpansionContentsChecks.Kind.IMAGE,records,io,files,kinds),"required missing image");
-        Files.delete(files.resolve(F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT));
+        Files.delete(files.resolve(A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT));
         for(var check:List.of(CLIInputOutputChecks.Check.MESSAGES,CLIInputOutputChecks.Check.SYSTEM_MESSAGES))
-            require(!CLIInputOutputChecks.check(check,io,files,F26Assignment2Suite.attachmentKinds()).isEmpty(),"Missing consumed expanded text passed "+check);
+            require(!CLIInputOutputChecks.check(check,io,files,A2ChecksConfiguration.attachmentKinds()).isEmpty(),"Missing consumed expanded text passed "+check);
         // A real prefix containing two nonstreaming Ollama prompts is sufficient
         // for prompt consistency, even though it does not satisfy the A2 script.
         var prompts=records.stream().filter(r->CLITraceEvidence.is(r,Event.COMMAND_HANDLED) && CLICommandNames.PROMPT.equals(CLITraceEvidence.commandName(r)))
@@ -59,7 +60,7 @@ public final class A2ScopedHelpersTest {
         int boundary=prompts.get(1).getTraceFileLineNumber();
         var prefix=Files.createTempDirectory(Path.of("build"),"nonstream-provider-check-");
         Files.write(prefix.resolve(CLITraceInformation.TRACE_FILE_NAME),Files.readAllLines(directory.resolve(CLITraceInformation.TRACE_FILE_NAME)).subList(0,boundary));
-        F26Assignment2Suite.setTraceDirectory(prefix.toString());
+        A2ChecksConfiguration.setTraceDirectory(prefix.toString());
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class);JUnitTestsEnvironment.clearCachedJUnitTestCases();
         full(AdaptivePromptCommandResultsMatch.class);
@@ -92,7 +93,7 @@ public final class A2ScopedHelpersTest {
         var missingHandleLines=prefixLines.stream().filter(line->!line.contains(handleEvent)).toList();
         require(missingHandleLines.size()<prefixLines.size(),"Handle mutation removed no evidence");
         Files.write(noHandles.resolve(CLITraceInformation.TRACE_FILE_NAME),missingHandleLines);
-        F26Assignment2Suite.setTraceDirectory(noHandles.toString());
+        A2ChecksConfiguration.setTraceDirectory(noHandles.toString());
         JUnitTestsEnvironment.clearCachedJUnitTestCases();
         var missingHandles=run(AdaptivePromptCommandResultsMatch.class);
         require(missingHandles.isFail(),"Missing used-mode handle evidence passed");
@@ -109,7 +110,7 @@ public final class A2ScopedHelpersTest {
         // JUnit now reports the failed prerequisite on dependent checks. Inspect
         // the provider evidence directly to retain the per-request diagnostic
         // assertion, rather than requiring an internally executed grade's notes.
-        var missingProcessor=F26Assignment2Suite.createTraceFilesProcessor(noHandles);
+        var missingProcessor=A2ChecksConfiguration.createTraceFilesProcessor(noHandles);
         missingProcessor.processTraceFiles();
         var identityErrors=new java.util.ArrayList<String>();
         for(var request:missingProcessor.getTraceRecords().values())

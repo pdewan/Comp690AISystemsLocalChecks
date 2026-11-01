@@ -1,11 +1,12 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import gradingTools.comp690f26.assignment2.commonInterfacesSuite.*;
-import gradingTools.comp690f26.assignment2.interfacesSuite.*;
-import gradingTools.comp690f26.assignment2.projectClassesSuite.*;
 import java.util.*;
+import gradingTools.comp690f26.assignment2.projectClassesSuite.*;
+import gradingTools.comp690f26.assignment2.interfacesSuite.*;
+import gradingTools.comp690f26.assignment2.commonInterfacesSuite.*;
+import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 
 /** Each general interface check must visibly execute the project aggregate.
  * A failed aggregate blocks both general rules, but not the role-specific
@@ -25,7 +26,7 @@ public final class A2InterfaceAggregatePrerequisitesTest {
     public static void main(String[] args) {
         if(args.length!=1)throw new IllegalArgumentException("Supply correct A2 directory");
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
-        F26Assignment2Suite.setTraceDirectory(args[0]);
+        A2ChecksConfiguration.setTraceDirectory(args[0]);
         for(var general:List.of(A2AllTaggedClassesImplementSingleInterface.class,A2TaggedFieldsUseInterfaces.class)) {
             var root=BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class).rootNode;
             JUnitTestsEnvironment.clearCachedJUnitTestCases();

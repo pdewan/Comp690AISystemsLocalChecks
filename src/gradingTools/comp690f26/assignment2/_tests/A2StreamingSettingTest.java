@@ -1,11 +1,10 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.cli.MinimalCLITrace;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import java.nio.file.*;
 import java.util.*;
+import java.nio.file.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 
 /** Correct captured session passes. Removing each evidence channel, changing
  * the setting, or omitting either exercised mode must fail independently. */
@@ -13,10 +12,10 @@ public final class A2StreamingSettingTest {
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply correct fixture directory");
         var directory=Path.of(args[0]);
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(directory);
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(directory);
         processor.processTraceFiles();
         var records=new ArrayList<>(processor.getTraceRecords().values());
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
         var errors=CLIStreamingSettingChecks.check(records,io);
         require(errors.isEmpty(),"Correct session: "+errors);
         require(CLIStreamingSettingChecks.checkOutput(io).isEmpty(),"Correct I/O-only session");
@@ -58,7 +57,7 @@ public final class A2StreamingSettingTest {
         // The shared A1 validator must still reject wrong callback contents.
         // Fresh processors keep recorded failures independent for the two providers.
         for(String provider:List.of("Gemini","Ollama")) {
-            var fresh=F26Assignment2Suite.createTraceFilesProcessor(directory);
+            var fresh=A2ChecksConfiguration.createTraceFilesProcessor(directory);
             fresh.processTraceFiles();
             require(fresh.checkPartialResponseCallbacksInvoked(provider).passed(),"Correct A1 callback evidence: "+provider);
             var callback=fresh.getTraceRecords().values().stream()

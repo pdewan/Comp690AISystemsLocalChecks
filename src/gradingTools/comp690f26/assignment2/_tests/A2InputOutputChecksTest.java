@@ -1,14 +1,15 @@
 package gradingTools.comp690f26.assignment2._tests;
+import java.util.function.*;
+import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.files.*;
+import gradingTools.comp690f26.common.io.*;
+import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.trace.processors.CLITraceInformation;
-import eduAI.trace.processors.cli.*;
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.*;
-import gradingTools.comp690f26.common.io.*;
-import gradingTools.comp690f26.files.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.function.*;
 
 
 /** Independent stdout controls/mutations. No traces are supplied to the I/O
@@ -20,7 +21,7 @@ public final class A2InputOutputChecksTest {
         Path correct=Path.of(args[0]), isolated=Path.of(args[1]);
         require(!correct.toAbsolutePath().normalize().equals(isolated.toAbsolutePath().normalize()),"Use a separate test directory");
         Files.createDirectories(isolated);
-        var parser=F26Assignment2Suite.createInteractionsProcessor();
+        var parser=A2ChecksConfiguration.createInteractionsProcessor();
         var original=Files.readAllLines(correct.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME));
         var io=parser.processLines(original).interaction().orElseThrow();
         var simple=parser.processLines(simpleSession()).interaction().orElseThrow();
@@ -83,9 +84,9 @@ public final class A2InputOutputChecksTest {
         // Availability and I/O checks run without the trace file.
         require(!Files.exists(isolated.resolve(CLITraceInformation.TRACE_FILE_NAME)),"Isolation directory must have no trace file");
         Files.copy(correct.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME),isolated.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME),StandardCopyOption.REPLACE_EXISTING);
-        for(String file:List.of(F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT,F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT))
+        for(String file:List.of(A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT,A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT))
             Files.copy(correct.resolve(file),isolated.resolve(file),StandardCopyOption.REPLACE_EXISTING);
-        F26Assignment2Suite.setTraceDirectory(isolated.toString());
+        A2ChecksConfiguration.setTraceDirectory(isolated.toString());
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         var root=BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class).rootNode;
         for(var check:List.of(AdaptivePropertyOutputMatches.class,AdaptiveTranscriptOutputMatches.class,AdaptiveMessagesOutputMatches.class,AdaptiveSystemMessagesOutputMatches.class))
@@ -136,10 +137,10 @@ public final class A2InputOutputChecksTest {
         throw new AssertionError("No mutation target");
     }
     private static void pass(CLIInputOutputChecks.Check check,CLIMixedIO io,Path dir)throws Exception {
-        var errors=CLIInputOutputChecks.check(check,io,dir,F26Assignment2Suite.attachmentKinds());require(errors.isEmpty(),check+": "+errors);
+        var errors=CLIInputOutputChecks.check(check,io,dir,A2ChecksConfiguration.attachmentKinds());require(errors.isEmpty(),check+": "+errors);
     }
     private static void reject(CLIInputOutputChecks.Check check,CLIMixedIO io,Path dir)throws Exception {
-        require(!CLIInputOutputChecks.check(check,io,dir,F26Assignment2Suite.attachmentKinds()).isEmpty(),"Mutation survived: "+check);mutations++;
+        require(!CLIInputOutputChecks.check(check,io,dir,A2ChecksConfiguration.attachmentKinds()).isEmpty(),"Mutation survived: "+check);mutations++;
     }
     private static void require(boolean condition,String message) { if(!condition) throw new AssertionError(message); }
 }

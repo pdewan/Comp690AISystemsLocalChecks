@@ -1,14 +1,15 @@
 package gradingTools.comp690f26.assignment2._tests;
+import static gradingTools.comp690f26.assignment2._tests.A1A2ScopeRegressionTest.*;
+import java.util.*;
+import java.nio.file.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.trace.lib.LibTraceEvent;
-import eduAI.trace.processors.*;
-import grader.basics.junit.*;
 import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import java.nio.file.*;
-import java.util.*;
 
 
-import static gradingTools.comp690f26.assignment2._tests.A1A2ScopeRegressionTest.*;
 
 /** Both provider-switch endpoints are checked. Mistranslated native text
  * rejects textual retention while image retention remains independent. */
@@ -18,8 +19,8 @@ public final class CrossProviderHistoryPrerequisitesTest {
     public static void main(String[] args) throws Exception {
         if (args.length != 1) throw new IllegalArgumentException("Supply correct A2 directory");
         Path source = Path.of(args[0]);
-        F26Assignment2Suite.setTraceDirectory(source.toString());
-        var processor = F26Assignment2Suite.createTraceFilesProcessor(source);
+        A2ChecksConfiguration.setTraceDirectory(source.toString());
+        var processor = A2ChecksConfiguration.createTraceFilesProcessor(source);
         processor.processTraceFiles();
         var requests = processor.getTraceRecords().values().stream()
             .filter(r -> LibTraceEvent.REQUEST_SENT.name().toLowerCase(Locale.ROOT).equals(r.getTraceLine().getEventName()))
@@ -27,7 +28,7 @@ public final class CrossProviderHistoryPrerequisitesTest {
         var original = Files.readAllLines(source.resolve(CLITraceInformation.TRACE_FILE_NAME));
         var directory = Files.createTempDirectory(Path.of("build"), "cross-provider-history-");
         Path trace = directory.resolve(CLITraceInformation.TRACE_FILE_NAME);
-        F26Assignment2Suite.setTraceDirectory(directory.toString());
+        A2ChecksConfiguration.setTraceDirectory(directory.toString());
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class);
         var directions = new HashSet<String>();

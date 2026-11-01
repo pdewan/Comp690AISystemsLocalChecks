@@ -1,8 +1,9 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 import java.util.*;
+import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 
 /** The original layout is an independent scoring baseline. Combining suites
  * must preserve every leaf's points and effective extra-credit flag, except
@@ -22,7 +23,7 @@ public final class A2CombinedSuitesTest {
         System.exit(0);
     }
     public static void verify() {
-        F26Assignment2Suite.configureProperties();
+        A2ChecksConfiguration.configureProperties();
         var original=BasicJUnitUtils.toGradableTree(A2OriginalLayout.class).rootNode;
         var combined=BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class).rootNode;
         var before=new HashMap<Class<?>,Score>(); var after=new HashMap<Class<?>,Score>();

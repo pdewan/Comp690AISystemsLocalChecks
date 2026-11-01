@@ -1,4 +1,5 @@
 package gradingTools.comp690f26.assignment2._tests;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import grader.basics.junit.BasicJUnitUtils;
 import grader.basics.junit.JUnitTestsEnvironment;
@@ -11,7 +12,7 @@ import gradingTools.comp690f26.files.A2CLIRequestExpectationsProvided;
 public final class A2RequestExpectationsPrerequisiteTest {
     public static void main(String[] args) throws Exception {
         if (args.length != 1) throw new IllegalArgumentException("Supply the correct fixture directory");
-        F26Assignment2Suite.setTraceDirectory(args[0]);
+        A2ChecksConfiguration.setTraceDirectory(args[0]);
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         var root = BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class).rootNode;
         var comparison = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(A2CLIRequestSettingsMatch.class);

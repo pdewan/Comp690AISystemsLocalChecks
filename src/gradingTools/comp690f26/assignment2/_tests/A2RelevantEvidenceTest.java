@@ -1,19 +1,20 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.*;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import grader.basics.junit.*;
+import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.function.*;
+import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.common.commands.*;
 import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import eduAI.trace.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIImageFileExpansionContentsMatch;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLITextFileExpansionContentsMatch;
-import gradingTools.comp690f26.common.commands.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.function.*;
 
 
-import static eduAI.trace.cli.MinimalCLITrace.*;
 
 /** Missing model evidence fails choices. Missing submitted expander classes
  * block only their own file kind and preserve the independent aggregate grade. */
@@ -23,24 +24,24 @@ public final class A2RelevantEvidenceTest {
     private static Path fixture;
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply correct A2 directory");
-        Path source=Path.of(args[0]); F26Assignment2Suite.setTraceDirectory(args[0]);
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(source);processor.processTraceFiles();
+        Path source=Path.of(args[0]); A2ChecksConfiguration.setTraceDirectory(args[0]);
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(source);processor.processTraceFiles();
         var records=new ArrayList<>(processor.getTraceRecords().values());
         records.sort(Comparator.comparingInt(TraceRecord::getTraceFileLineNumber));
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(source.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
-        var contracts=F26Assignment2Suite.createPropertyCheckers();
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(source.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
+        var contracts=A2ChecksConfiguration.createPropertyCheckers();
         var noModels=records.stream().filter(r->!eduAI.properties.AIPropertyNames.CURRENT_MODELS.equals(r.getTraceLine().getAuxiliaryData().get(NAME))).toList();
-        fail(CLIPropertyChoicesChecks.check(CLIPropertyChoicesChecks.Check.MODEL_CHOICES,noModels,F26Assignment2Suite.propertyExpectations()),"model evidence still required");
+        fail(CLIPropertyChoicesChecks.check(CLIPropertyChoicesChecks.Check.MODEL_CHOICES,noModels,A2ChecksConfiguration.propertyExpectations()),"model evidence still required");
         fixture=Files.createTempDirectory(Path.of("build"),"a2-relevant-evidence-");
         for(var name:List.of(CLITraceInformation.TRACE_FILE_NAME,CLITraceInformation.INTERACTIONS_FILE_NAME,
-                F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT,F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT)) Files.copy(source.resolve(name),fixture.resolve(name));
+                A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT,A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT)) Files.copy(source.resolve(name),fixture.resolve(name));
         var raw=Files.readAllLines(source.resolve(CLITraceInformation.TRACE_FILE_NAME));
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
-        F26Assignment2Suite.setTraceDirectory(fixture.toString());BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class);
+        A2ChecksConfiguration.setTraceDirectory(fixture.toString());BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class);
         var text=records.stream().filter(r->CLITraceEvidence.is(r,Event.FILE_EXPANDED)
-            && F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT.equals(r.getTraceLine().getAuxiliaryData().get(INPUT_FILE_NAME))).findFirst().orElseThrow();
+            && A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT.equals(r.getTraceLine().getAuxiliaryData().get(INPUT_FILE_NAME))).findFirst().orElseThrow();
         var image=records.stream().filter(r->CLITraceEvidence.is(r,Event.FILE_EXPANDED)
-            && F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT.equals(r.getTraceLine().getAuxiliaryData().get(INPUT_FILE_NAME))).findFirst().orElseThrow();
+            && A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT.equals(r.getTraceLine().getAuxiliaryData().get(INPUT_FILE_NAME))).findFirst().orElseThrow();
         mutate(raw,text,line->line.replace(className(text,EXPANDER),MISSING_CLASS));
         var aggregate=gradingTools.comp690f26.assignment2.projectClassesSuite.A2TracedClassesExistInProject.class;
         reject(aggregate);

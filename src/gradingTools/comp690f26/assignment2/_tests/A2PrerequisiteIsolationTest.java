@@ -1,9 +1,13 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import grader.basics.junit.*;
+import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.*;
+import java.nio.file.*;
 import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.ObserverRolesSeparated;
@@ -13,11 +17,8 @@ import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIRequestSettingsMa
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLITextFileExpansionContentsMatch;
 import gradingTools.comp690f26.common.commands.AdaptiveExpectedCommandInputs;
 import gradingTools.comp690f26.common.properties.AdaptiveExpectedPropertyInputs;
-import java.nio.file.*;
-import java.util.*;
 
 
-import static eduAI.trace.cli.MinimalCLITrace.*;
 
 /** Deletes unrelated evidence and verifies independent checks still pass;
  * deletes required evidence and verifies those same checks fail. Finally selects
@@ -25,10 +26,10 @@ import static eduAI.trace.cli.MinimalCLITrace.*;
 public final class A2PrerequisiteIsolationTest {
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply correct A2 directory");
-        Path directory=Path.of(args[0]); F26Assignment2Suite.setTraceDirectory(args[0]);
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(directory);processor.processTraceFiles();
+        Path directory=Path.of(args[0]); A2ChecksConfiguration.setTraceDirectory(args[0]);
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(directory);processor.processTraceFiles();
         var records=new ArrayList<>(processor.getTraceRecords().values());
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
         Path missing=directory.resolve("missing-attachments-for-isolation-test");
         require(!Files.exists(missing),"Isolation directory must not exist");
         for(var rule:List.of(CLIArchitectureChecks.Check.COMMAND_OUTPUT,CLIArchitectureChecks.Check.STREAM_OUTPUT,

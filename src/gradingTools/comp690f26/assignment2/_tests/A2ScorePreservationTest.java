@@ -1,9 +1,10 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
 import java.util.*;
+import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
 import org.junit.runners.Suite;
 import util.annotations.IsExtra;
 import util.annotations.MaxValue;
@@ -18,11 +19,11 @@ public final class A2ScorePreservationTest {
     private static final double EXPECTED_HISTORY_CHECK_POINTS = 10;
     private record Score(double total, boolean extra) { }
     public static void main(String[] args) {
-        F26Assignment1Suite.configureProperties();
+        A1ChecksConfiguration.configureProperties();
         var a1 = BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class).rootNode;
         Map<Class<?>, Score> released = new HashMap<>();
         for (var child : a1.children()) released.put(child.getJUnitClass(), new Score(child.getComputedMaxScore(), child.isExtra()));
-        F26Assignment2Suite.configureProperties();
+        A2ChecksConfiguration.configureProperties();
         var a2 = BasicJUnitUtils.toGradableTree(A2OriginalLayout.class).rootNode;
         verifyHistoryWeights(a1, true);
         verifyHistoryWeights(a2, false);

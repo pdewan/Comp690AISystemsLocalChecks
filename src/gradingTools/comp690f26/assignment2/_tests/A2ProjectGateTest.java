@@ -1,6 +1,7 @@
 package gradingTools.comp690f26.assignment2._tests;
-
 import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 import gradingTools.comp690f26.assignment2.projectClassesSuite.A2TracedClassesExistInProject;
 import gradingTools.comp690f26.assignment2.separatedClassesSuite.ExitCommandHandlerIsSeparated;
@@ -12,7 +13,7 @@ public final class A2ProjectGateTest {
     public static void main(String[] args) throws Exception {
         if (args.length != 2) throw new IllegalArgumentException("Supply fixture directory and scenario");
         Scenario scenario = Scenario.valueOf(args[1]);
-        F26Assignment2Suite.setTraceDirectory(args[0]);
+        A2ChecksConfiguration.setTraceDirectory(args[0]);
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class);
         var event = JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(CLICommandHandledTraced.class);

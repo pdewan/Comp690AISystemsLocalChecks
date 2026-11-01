@@ -1,17 +1,17 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
+import static gradingTools.comp690f26.assignment2._tests.A1A2ScopeRegressionTest.*;
+import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.common.commands.*;
 import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import gradingTools.comp690f26.common.commands.*;
-import java.nio.file.*;
-import java.util.*;
 
 
-import static gradingTools.comp690f26.assignment2._tests.A1A2ScopeRegressionTest.*;
 
 /** Cached failed/partial scores verify prerequisite independence and required
  * translation gates. These are grading-framework tests, not trace mutations. */
@@ -20,7 +20,7 @@ public final class HistoryIndependenceTest {
     public static void main(String[] args)throws Exception {
         if(args.length!=2)throw new IllegalArgumentException("Supply A2 and A1 correct directories");
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
-        F26Assignment1Suite.setTraceDirectory(args[1]);BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class);
+        A1ChecksConfiguration.setTraceDirectory(args[1]);BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class);
         promptAndAnswerIndependence();
         var image=gradingTools.comp690f26.common.expectedRequestContentSuite.AdaptiveOllamaExpectedImageMatchesGenericImage.class;
         var retention=gradingTools.comp690f26.assignment1.contextHistorySuite.OllamaPreviousImagesRetained.class;

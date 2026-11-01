@@ -1,12 +1,12 @@
 package gradingTools.comp690f26.assignment2._tests;
+import java.util.*;
+import java.nio.file.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.trace.lib.LibTraceEvent;
-import eduAI.trace.processors.*;
 import eduAI.trace.processors.mutations.ProviderLookupMutations;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 import gradingTools.comp690f26.common.TraceEvidenceView;
-import java.nio.file.*;
-import java.util.*;
 
 
 /** Swapped lookup keys must fail against native request types in both providers
@@ -14,9 +14,9 @@ import java.util.*;
  * session fails. This uses actual trace mutations, not injected checker results. */
 public final class ProviderLookupConsistencyTest {
     private static TraceFilesProcessor read(Path directory) {
-        F26Assignment2Suite.setTraceDirectory(directory.toString());
-        F26Assignment2Suite.configureProperties();
-        var processor = F26Assignment2Suite.createTraceFilesProcessor(directory);
+        A2ChecksConfiguration.setTraceDirectory(directory.toString());
+        A2ChecksConfiguration.configureProperties();
+        var processor = A2ChecksConfiguration.createTraceFilesProcessor(directory);
         processor.processTraceFiles();
         return processor;
     }

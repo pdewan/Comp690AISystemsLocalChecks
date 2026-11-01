@@ -1,16 +1,17 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.*;
-import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIRequestSettingsMatch;
-import gradingTools.comp690f26.common.commands.*;
-import gradingTools.comp690f26.common.expectedRequestContentSuite.*;
-import gradingTools.comp690f26.common.io.*;
-import gradingTools.comp690f26.files.A2CLIRequestExpectationsProvided;
-import java.nio.file.*;
 import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.common.io.*;
+import gradingTools.comp690f26.common.expectedRequestContentSuite.*;
+import gradingTools.comp690f26.common.commands.*;
+import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIRequestSettingsMatch;
+import gradingTools.comp690f26.files.A2CLIRequestExpectationsProvided;
 
 
 /** Uses fresh grading executions, not cached successes. Mutates only copied files.
@@ -26,11 +27,11 @@ public final class A2EvidenceIndependenceTest {
         Path source=Path.of(args[0]);
         Path fixture=Files.createTempDirectory(Path.of("build"),"a2-evidence-independence-");
         for(var name:List.of(CLITraceInformation.TRACE_FILE_NAME,CLITraceInformation.INTERACTIONS_FILE_NAME,
-                F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT,F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT))
+                A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT,A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT))
             Files.copy(source.resolve(name),fixture.resolve(name));
         Path log=fixture.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME);
         String original=Files.readString(log).replace("\r\n","\n");
-        F26Assignment2Suite.setTraceDirectory(fixture.toString());
+        A2ChecksConfiguration.setTraceDirectory(fixture.toString());
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class);
         full(A2CLIRequestSettingsMatch.class);
@@ -84,8 +85,8 @@ public final class A2EvidenceIndependenceTest {
             fails(broken==CLIMessageView.ORDINARY?AdaptiveMessagesOutputMatches.class:AdaptiveSystemMessagesOutputMatches.class);
         }
         Files.writeString(log,original);full(CLIOuterOutputSyntax.class);
-        Files.delete(fixture.resolve(F26Assignment2Suite.REQUIRED_IMAGE_ATTACHMENT));
-        Files.delete(fixture.resolve(F26Assignment2Suite.REQUIRED_TEXT_ATTACHMENT));
+        Files.delete(fixture.resolve(A2ChecksConfiguration.REQUIRED_IMAGE_ATTACHMENT));
+        Files.delete(fixture.resolve(A2ChecksConfiguration.REQUIRED_TEXT_ATTACHMENT));
         full(A2CLIRequestExpectationsProvided.class);
         fails(AdaptiveGeminiExpectedImageMatchesGenericImage.class);
         full(A2CLIRequestSettingsMatch.class);
@@ -94,7 +95,7 @@ public final class A2EvidenceIndependenceTest {
         JUnitTestsEnvironment.getPassFailJUnitTest(A2CLIRequestExpectationsProvided.class)
             .setLastResult(new TestCaseResult(PARTIAL_CREDIT,"Injected partial attachment preparation"));
         full(A2CLIRequestSettingsMatch.class);full(AdaptiveTranscriptCommandResultsMatch.class);
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(fixture);processor.processTraceFiles();
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(fixture);processor.processTraceFiles();
         var wrong=new CLIMixedIO(io.entries().stream().map(e->{
             var c=e.input();var values=new LinkedHashMap<>(c.properties());
             if(c.kind()==CLIInteraction.Kind.PROMPT) values.put(eduAI.properties.AIPropertyNames.TEMPERATURE,WRONG_TEMPERATURE);

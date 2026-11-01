@@ -1,16 +1,18 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.*;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment2.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.function.*;
-
 import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.function.*;
+import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import eduAI.trace.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
+
+import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
+
 
 /** Exercises choices and omitted translation-event mutations, plus failed and partial A1
  * structural results. Unrelated defects preserve full semantic credit; consumed
@@ -20,11 +22,11 @@ public final class A1A2ScopeRegressionTest {
     private static final String EXTRA_MODEL="unused-extra-model";
     public static void main(String[] args)throws Exception {
         if(args.length!=2)throw new IllegalArgumentException("Supply A2 and A1 correct directories");
-        Path source=Path.of(args[0]);F26Assignment2Suite.setTraceDirectory(args[0]);
-        var p=F26Assignment2Suite.createTraceFilesProcessor(source);p.processTraceFiles();
+        Path source=Path.of(args[0]);A2ChecksConfiguration.setTraceDirectory(args[0]);
+        var p=A2ChecksConfiguration.createTraceFilesProcessor(source);p.processTraceFiles();
         var records=new ArrayList<>(p.getTraceRecords().values());records.sort(Comparator.comparingInt(TraceRecord::getTraceFileLineNumber));
 
-        var policy=F26Assignment2Suite.propertyExpectations();var registry=F26Assignment2Suite.createPropertyCheckers();
+        var policy=A2ChecksConfiguration.propertyExpectations();var registry=A2ChecksConfiguration.createPropertyCheckers();
         var rows=CLIPropertyTraceHistory.returns(records).operations().stream().map(CLIPropertyTraceHistory.Operation::fields).toList();
         String path=CLIPropertyResultFields.choicesFieldFromSelections(rows,new ArrayList<>());
         require(path!=null,"Correct choices field not found");
@@ -35,7 +37,7 @@ public final class A1A2ScopeRegressionTest {
         fail(CLIPropertyConsistencyChecks.check(CLIPropertyConsistencyChecks.Check.ALTERNATIVES,extra,registry),"changed alternatives must fail consistency");
         // A1 keeps every architectural assessment and its points, but these
         // results no longer gate provider value/callback comparisons.
-        F26Assignment1Suite.setTraceDirectory(args[1]);BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class);
+        A1ChecksConfiguration.setTraceDirectory(args[1]);BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class);
         JUnitTestsEnvironment.clearCachedJUnitTestCases();
         var structural=List.of(gradingTools.comp690f26.assignment1.commonInterfacesSuite.NativeServerHandleAdapters.class,
             gradingTools.comp690f26.assignment1.commonInterfacesSuite.NativeParameterAdapters.class,
@@ -62,7 +64,7 @@ public final class A1A2ScopeRegressionTest {
     /** Both translation events are required by the restored request contract;
      * omissions visibly fail that contract and block dependent request checks. */
     private static void requestDomains(Path source)throws Exception {
-        var processor=F26Assignment1Suite.createTraceFilesProcessor(source);processor.processTraceFiles();
+        var processor=A1ChecksConfiguration.createTraceFilesProcessor(source);processor.processTraceFiles();
 
         var records=processor.getTraceRecords().values();
         Path fixture=Files.createTempDirectory(Path.of("build"),"request-domain-scope-");
@@ -72,7 +74,7 @@ public final class A1A2ScopeRegressionTest {
             if(!originals.containsKey(file)) originals.put(file,Files.readAllLines(file));
         }
         for(var file:originals.keySet())Files.write(fixture.resolve(file.getFileName()),originals.get(file));
-        F26Assignment1Suite.setTraceDirectory(fixture.toString());BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class);
+        A1ChecksConfiguration.setTraceDirectory(fixture.toString());BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class);
         var parameters=gradingTools.comp690f26.assignment1.requestTranslationSuite.OllamaParametersMatchGenericParameters.class;
         var text=gradingTools.comp690f26.assignment1.requestTranslationSuite.OllamaTextualContextWindowMatchesGenericContextWindow.class;
         for(String event:List.of("message_translated","parameter_translated")) {

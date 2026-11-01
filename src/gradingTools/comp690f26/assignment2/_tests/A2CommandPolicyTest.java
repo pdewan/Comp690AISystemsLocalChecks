@@ -1,12 +1,13 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment2.*;
-import gradingTools.comp690f26.common.*;
-import gradingTools.comp690f26.common.commands.*;
-import java.nio.file.*;
 import java.util.*;
+import java.nio.file.*;
+import gradingTools.comp690f26.common.commands.*;
+import gradingTools.comp690f26.common.*;
+import gradingTools.comp690f26.assignment2.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 
 /**
  * Verifies trace-only command checks run without I/O and semantic command checks are
@@ -18,8 +19,8 @@ public final class A2CommandPolicyTest {
     private static int assertions;
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply the correct fixture directory");
-        Path directory=Path.of(args[0]);F26Assignment2Suite.configureProperties();
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(directory);processor.processTraceFiles();
+        Path directory=Path.of(args[0]);A2ChecksConfiguration.configureProperties();
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(directory);processor.processTraceFiles();
         var records=processor.getTraceRecords().values();
         var invoke=AbstractTraceProcessorCheck.class.getDeclaredMethod("check",TraceFilesProcessor.class);invoke.setAccessible(true);
         var prerequisites=AbstractTraceProcessorCheck.class.getDeclaredMethod("additionalPrecedingTests");prerequisites.setAccessible(true);
@@ -40,8 +41,8 @@ public final class A2CommandPolicyTest {
             var actual=List.of((Class<?>[])prerequisites.invoke(type.getConstructor().newInstance()));
             require(!actual.contains(AdaptiveExpectedCommandInputs.class),"Reversed prerequisite direction");
         }
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
-        var policy=F26Assignment2Suite.commandExpectations();
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
+        var policy=A2ChecksConfiguration.commandExpectations();
         require(policy.check(records,io).passed(),"Correct configured session rejected");
         var changed=new ArrayList<>(policy.steps());Collections.reverse(changed);
         require(!new CLICommandExpectations(changed).check(records,io).passed(),"Configured order ignored");
@@ -62,7 +63,7 @@ public final class A2CommandPolicyTest {
         var onlyProps=records.stream().filter(r->CLITraceEvidence.commandResult(r)&&CLICommandNames.PROPERTY.equals(CLITraceEvidence.commandName(r))).toList();
         require(CLICommandHandlerChecks.check(onlyProps,CLICommandHandlerChecks.Check.REUSE).passed(),"Unrelated commands incorrectly required");
         require(!CLICommandHandlerChecks.check(onlyProps.subList(0,1),CLICommandHandlerChecks.Check.REUSE).passed(),"One observation incorrectly proves reuse");
-        F26Assignment2Suite.setTraceDirectory(directory.toString());
+        A2ChecksConfiguration.setTraceDirectory(directory.toString());
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         grader.basics.junit.BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class);
         var selected=grader.basics.junit.JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(AdaptiveExpectedCommandInputs.class);

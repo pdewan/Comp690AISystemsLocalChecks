@@ -1,20 +1,21 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.*;
+import java.util.*;
+import gradingTools.comp690f26.assignment2.physicalStructureSuite.*;
 import gradingTools.comp690f26.assignment2.interfacesSuite.*;
+import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.ObserverRolesSeparated;
-import gradingTools.comp690f26.assignment2.physicalStructureSuite.*;
-import java.util.*;
 
 /** Delivery needs event evidence; independent API, storage and role-separation
  * assessments must neither run nor gate delivery or input credit. */
 public final class A2ObserverPrerequisitesTest {
     public static void main(String[] args) throws Exception {
         if (args.length != 1) throw new IllegalArgumentException("Supply the correct A2 fixture directory");
-        F26Assignment2Suite.setTraceDirectory(args[0]);
+        A2ChecksConfiguration.setTraceDirectory(args[0]);
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         requirePrerequisite(A2StreamObservableObserverMethods.class, gradingTools.comp690f26.assignment2.projectClassesSuite.CLIStreamOutputObserverExistsInProject.class);
         requirePrerequisite(A2DispatcherObserverTypes.class, gradingTools.comp690f26.assignment2.projectClassesSuite.CLICommandDispatcherExistsInProject.class);

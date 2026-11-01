@@ -1,10 +1,10 @@
 package gradingTools.comp690f26.files._tests;
-
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
 import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 import gradingTools.comp690f26.common.expectedRequestContentSuite.AdaptiveGeminiExpectedPromptsInProviderRequests;
 import gradingTools.comp690f26.common.io.CLIOuterOutputSyntax;
-import gradingTools.comp690f26.files.A2FilesProvidedSuite;
 import gradingTools.comp690f26.files.AdaptiveTraceFilesProvided;
 import gradingTools.comp690f26.files.FilesProvidedSupport;
 import java.nio.file.Files;
@@ -32,13 +32,13 @@ public final class FilesProvidedSuiteTest {
 	public static void main(String[] args) throws Exception {
 		Path root = Files.createTempDirectory("files-provided-suite-");
 		try {
-			F26Assignment1Suite.configureProperties();
+			A1ChecksConfiguration.configureProperties();
 			select(root);
 			CLIOuterOutputSyntax notRequired = new CLIOuterOutputSyntax();
 			require(notRequired.test(null, false).isPass(), "A1 required CLI I/O");
 			require(notRequired.getInteractions().isEmpty(), "A1 fabricated interactions");
 			require(!new ExpectedCheckProbe().requiresInteractions(), "A1 gained a CLI dependency");
-			F26Assignment2Suite.configureProperties();
+			A2ChecksConfiguration.configureProperties();
 			require(new ExpectedCheckProbe().requiresInteractions(), "A2 expectations lack their prerequisite");
 
 			Path complete = Files.createDirectory(root.resolve("complete"));
@@ -111,7 +111,7 @@ public final class FilesProvidedSuiteTest {
 			require(!tracePasses() && !io.test(null, false).isPass(), "Ambiguous split runs combined");
 			System.out.println("FilesProvidedSuiteTest passed");
 		} finally {
-			F26Assignment1Suite.configureProperties();
+			A1ChecksConfiguration.configureProperties();
 			select(Path.of("."));
 		}
 	}

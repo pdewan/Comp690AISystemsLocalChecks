@@ -1,9 +1,11 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment1.projectClassesSuite.*;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
 import gradingTools.comp690f26.assignment1.separatedClassesSuite.*;
+import gradingTools.comp690f26.assignment1.projectClassesSuite.*;
+import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
 import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 import java.util.List;
 
@@ -25,8 +27,8 @@ public final class A1SeparationPrerequisitesTest {
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         for (boolean cli : List.of(false,true)) {
             JUnitTestsEnvironment.clearCachedJUnitTestCases();
-            if(cli) { F26Assignment2Suite.configureProperties(); F26Assignment2Suite.setTraceDirectory(args[1]); }
-            else { F26Assignment1Suite.configureProperties(); F26Assignment1Suite.setTraceDirectory(args[0]); }
+            if(cli) { A2ChecksConfiguration.configureProperties(); A2ChecksConfiguration.setTraceDirectory(args[1]); }
+            else { A1ChecksConfiguration.configureProperties(); A1ChecksConfiguration.setTraceDirectory(args[0]); }
             var root=BasicJUnitUtils.toGradableTree(cli?F26Assignment2Suite.class:F26Assignment1Suite.class).rootNode;
             double separationPoints=java.util.Arrays.stream(A1SeparatedClassesSuite.class.getAnnotation(org.junit.runners.Suite.SuiteClasses.class).value())
                 .mapToDouble(type->root.findTest(type).getComputedMaxScore()).sum();

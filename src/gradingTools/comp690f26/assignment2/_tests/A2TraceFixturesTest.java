@@ -1,7 +1,11 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.processors.*;
+import java.util.*;
+import java.nio.file.*;
+import java.lang.reflect.*;
 import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 import eduAI.trace.processors.cli.CLICommandResultChecks;
 import eduAI.trace.processors.cli.CLITraceExpectations;
 import eduAI.trace.processors.mutations.CLICommandResultMutations;
@@ -10,22 +14,19 @@ import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
 import gradingTools.comp690f26.common.AbstractTraceProcessorCheck;
 import gradingTools.comp690f26.common.io.CLIOuterOutputSyntax;
-import java.lang.reflect.*;
-import java.nio.file.*;
-import java.util.*;
 import org.junit.runners.Suite;
 
 
 /** Uses the actual suite's trace checks, without GUI/project scans or model executions. */
 public class A2TraceFixturesTest {
     private static CLICommandResultCheckerRegistry sessionRules(CLIMixedIO io, Path directory) throws java.io.IOException {
-        var rules=F26Assignment2Suite.createCommandResultCheckers();
-        rules.register(CLICommandNames.MESSAGES,new CLIMessagesCommandResultChecker(io,directory,F26Assignment2Suite.attachmentKinds()));
+        var rules=A2ChecksConfiguration.createCommandResultCheckers();
+        rules.register(CLICommandNames.MESSAGES,new CLIMessagesCommandResultChecker(io,directory,A2ChecksConfiguration.attachmentKinds()));
         return rules;
     }
     public static void main(String[] args) throws Exception {
         Path correct = Path.of(args[0]), broken = Path.of(args[1]);
-        F26Assignment2Suite.configureProperties();
+        A2ChecksConfiguration.configureProperties();
         Set<Class<?>> checks = new LinkedHashSet<>();
         collect(F26Assignment2Suite.class, checks);
         Method invoke = AbstractTraceProcessorCheck.class.getDeclaredMethod("check", TraceFilesProcessor.class);
@@ -64,7 +65,7 @@ public class A2TraceFixturesTest {
     }
 
     private static String failure(Path directory, Set<Class<?>> checks, Method invoke) throws Exception {
-        var io = F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME));
+        var io = A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME));
         if (!io.succeeded()) throw new AssertionError("Unreadable fixture I/O: " + io.diagnostics());
         var processor = new NativeTraceFilesProcessor(directory.resolve(CLITraceInformation.TRACE_FILE_NAME));
         processor.processTraceFiles();
@@ -75,8 +76,8 @@ public class A2TraceFixturesTest {
             var result=switch(rule) {
                 case REGISTRATION -> eduAI.trace.processors.cli.CLICommandHandlerChecks.check(records,eduAI.trace.processors.cli.CLICommandHandlerChecks.Check.REGISTRATION);
                 case REUSE -> eduAI.trace.processors.cli.CLICommandHandlerChecks.check(records,eduAI.trace.processors.cli.CLICommandHandlerChecks.Check.REUSE);
-                case PROPERTY_RESULT -> CLICommandResultChecks.checkTraces(records,F26Assignment2Suite.createCommandResultCheckers(),eduAI.trace.processors.cli.CLICommandNames.PROPERTY);
-                case EXPECTED_INPUT -> F26Assignment2Suite.commandExpectations().check(records,io.interaction().orElseThrow());
+                case PROPERTY_RESULT -> CLICommandResultChecks.checkTraces(records,A2ChecksConfiguration.createCommandResultCheckers(),eduAI.trace.processors.cli.CLICommandNames.PROPERTY);
+                case EXPECTED_INPUT -> A2ChecksConfiguration.commandExpectations().check(records,io.interaction().orElseThrow());
             };
             if(result.passed()) throw new AssertionError("Command mutation survived intended check: "+directory+" "+rule);
             Files.writeString(directory.resolve("mutation-rejection.txt"),rule+"\n"+String.join("\n",result.level3ErrorMessages()));
@@ -84,14 +85,14 @@ public class A2TraceFixturesTest {
         Path choicesExpectation=directory.resolve(eduAI.trace.processors.mutations.CLIPropertyChoicesMutations.EXPECTATION_FILE);
         if(Files.exists(choicesExpectation)) {
             var rule=eduAI.trace.processors.cli.CLIPropertyChoicesChecks.Check.valueOf(Files.readString(choicesExpectation).strip());
-            var result=eduAI.trace.processors.cli.CLIPropertyChoicesChecks.check(rule,processor.getTraceRecords().values(),F26Assignment2Suite.propertyExpectations());
+            var result=eduAI.trace.processors.cli.CLIPropertyChoicesChecks.check(rule,processor.getTraceRecords().values(),A2ChecksConfiguration.propertyExpectations());
             if(result.passed()) throw new AssertionError("Required-choices mutation survived intended check: "+directory+" "+rule);
             Files.writeString(directory.resolve("mutation-rejection.txt"),rule+"\n"+String.join("\n",result.level3ErrorMessages()));
         }
         Path propertyExpectation=directory.resolve(eduAI.trace.processors.mutations.CLIPropertyConsistencyMutations.EXPECTATION_FILE);
         if(Files.exists(propertyExpectation)) {
             var rule=eduAI.trace.processors.cli.CLIPropertyConsistencyChecks.Check.valueOf(Files.readString(propertyExpectation).strip());
-            var result=eduAI.trace.processors.cli.CLIPropertyConsistencyChecks.check(rule,processor.getTraceRecords().values(),F26Assignment2Suite.createPropertyCheckers());
+            var result=eduAI.trace.processors.cli.CLIPropertyConsistencyChecks.check(rule,processor.getTraceRecords().values(),A2ChecksConfiguration.createPropertyCheckers());
             if(result.passed()) throw new AssertionError("Property mutation survived intended check: "+directory+" "+rule);
             Files.writeString(directory.resolve("mutation-rejection.txt"),rule+"\n"+String.join("\n",result.level3ErrorMessages()));
         }
@@ -139,7 +140,7 @@ public class A2TraceFixturesTest {
             var result = CLICommandResultMutations.HANDLER_INSTANCES_CHECK.equals(expected[0])
                     ? eduAI.trace.processors.cli.CLICommandHandlerChecks.check(processor.getTraceRecords().values(),eduAI.trace.processors.cli.CLICommandHandlerChecks.Check.REUSE)
                     : java.util.Set.of(eduAI.trace.processors.cli.CLICommandNames.PROPERTY,eduAI.trace.processors.cli.CLICommandNames.PROMPT).contains(expected[0])
-                    ? CLICommandResultChecks.checkTraces(processor.getTraceRecords().values(),F26Assignment2Suite.createCommandResultCheckers(),expected[0])
+                    ? CLICommandResultChecks.checkTraces(processor.getTraceRecords().values(),A2ChecksConfiguration.createCommandResultCheckers(),expected[0])
                     : CLICommandResultChecks.check(processor.getTraceRecords().values(),
                             io.interaction().orElseThrow(), sessionRules(io.interaction().orElseThrow(), directory), expected[0]);
             if (result.passed() || result.level3ErrorMessages().stream().noneMatch(error -> error.contains(expected[1])))
@@ -153,7 +154,7 @@ public class A2TraceFixturesTest {
         if (directory.getFileName().toString().startsWith("property_set_")) {
             var setterResult = eduAI.trace.processors.cli.CLIPropertySetChecks.check(
                     processor.getTraceRecords().values(), io.interaction().orElseThrow().entries()
-                            .stream().map(entry -> entry.input()).toList(), F26Assignment2Suite.createPropertyCheckers());
+                            .stream().map(entry -> entry.input()).toList(), A2ChecksConfiguration.createPropertyCheckers());
             if (setterResult.passed()) throw new AssertionError("Setter mutation survived its intended check: " + directory);
             Files.writeString(directory.resolve("mutation-rejection.txt"),
                     eduAI.trace.processors.cli.CLIPropertySetChecks.class.getSimpleName()+"\n" + String.join("\n", setterResult.level3ErrorMessages()) + "\n");

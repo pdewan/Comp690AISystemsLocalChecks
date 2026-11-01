@@ -1,9 +1,9 @@
 package gradingTools.comp690f26.common._tests;
-
-import eduAI.trace.processors.*;
 import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
+
 import java.nio.file.Path;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public final class ExpectedContentConfigurationTest {
         } catch (IllegalStateException expected) {
             require(expected.getMessage().contains("configured explicitly"), "Wrong missing-policy diagnostic");
         }
-        var a1 = F26Assignment1Suite.createTraceFilesProcessor(a1Directory);
+        var a1 = A1ChecksConfiguration.createTraceFilesProcessor(a1Directory);
         require(a1.checkExpectedPrompts().passed(), "Correct A1 prompts rejected");
         require(a1.checkExpectedGenericImagesMatch().passed(), "Correct A1 images rejected");
 
@@ -33,9 +33,9 @@ public final class ExpectedContentConfigurationTest {
         require(!wrong.checkExpectedPrompts().passed(), "Wrong fixed prompts accepted");
         require(!wrong.checkExpectedGenericImagesMatch().passed(), "Wrong fixed image accepted");
 
-        var io = F26Assignment2Suite.createInteractionsProcessor().process(a2Directory.resolve("CLIInputOutput.txt"));
+        var io = A2ChecksConfiguration.createInteractionsProcessor().process(a2Directory.resolve("CLIInputOutput.txt"));
         require(io.succeeded(), "A2 input could not be reconstructed");
-        var a2 = F26Assignment2Suite.createTraceFilesProcessor(a2Directory);
+        var a2 = A2ChecksConfiguration.createTraceFilesProcessor(a2Directory);
         a2.setExpectedContentChecks(new CLIExpectedContentChecks(CLITraceExpectations.from(io.interaction().orElseThrow(), a2Directory)));
         require(a2.checkExpectedPrompts().passed(), "Correct A2 prompts rejected");
         require(a2.checkExpectedGenericImagesMatch().passed(), "Correct A2 images rejected");

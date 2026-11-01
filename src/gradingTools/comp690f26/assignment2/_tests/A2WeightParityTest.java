@@ -1,7 +1,8 @@
 package gradingTools.comp690f26.assignment2._tests;
-
+import java.util.*;
 import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
 import gradingTools.comp690f26.assignment2.observerSuite.A2ObserverObservableSuite;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLISemanticsContract;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2SemanticsSuite;
@@ -10,8 +11,6 @@ import gradingTools.comp690f26.assignment2.suites.A2ExpectedContentSuite;
 import gradingTools.comp690f26.assignment2.suites.A2HandlerRegistrationSuite;
 import gradingTools.comp690f26.common.io.A2InputOutputConsistencySuite;
 import gradingTools.comp690f26.common.io.A2OutputSyntaxSuite;
-import gradingTools.comp690f26.common.io.CLIOuterOutputSyntax;
-import java.util.*;
 
 /** Independent rubric expectations catch lost nested weights and unintended zero-point checks. */
 public final class A2WeightParityTest {
@@ -32,7 +31,7 @@ public final class A2WeightParityTest {
         "A2TracedClassesExistInProject", "A2CLISemanticsContract",
         "AdaptiveTraceFilesProvided", "A2CLIRequestExpectationsProvided", "CLIInputOutputFileProvided");
     public static void main(String[] args) {
-        F26Assignment2Suite.configureProperties();
+        A2ChecksConfiguration.configureProperties();
         var root = BasicJUnitUtils.toGradableTree(A2OriginalLayout.class).rootNode;
         Set<String> remaining = new HashSet<>(EXPECTED_SUITE_POINTS.keySet());
         for (var suite : root.children()) {

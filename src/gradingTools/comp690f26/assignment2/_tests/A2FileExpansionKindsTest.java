@@ -1,14 +1,14 @@
 package gradingTools.comp690f26.assignment2._tests;
+import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.*;
+import java.nio.file.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.trace.TraceLine;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import java.nio.file.*;
-import java.util.*;
 
 
-import static eduAI.trace.cli.MinimalCLITrace.*;
 
 /** Both correct kinds pass; a missing, duplicate or misnamed expansion
  * fails only its own kind. An absent input kind earns no credit. */
@@ -16,11 +16,11 @@ public final class A2FileExpansionKindsTest {
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply the correct A2 directory");
         Path directory=Path.of(args[0]);
-        F26Assignment2Suite.configureProperties();
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(directory);
+        A2ChecksConfiguration.configureProperties();
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(directory);
         processor.processTraceFiles();
         var records=new ArrayList<>(processor.getTraceRecords().values());
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(
             directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
         for(var kind:CLIFileExpansionContentsChecks.Kind.values()) {
             require(check(kind,records,io,directory),"Correct "+kind);
@@ -58,7 +58,7 @@ public final class A2FileExpansionKindsTest {
         System.exit(0);
     }
     private static boolean check(CLIFileExpansionContentsChecks.Kind kind,Collection<TraceRecord> records,CLIMixedIO io,Path directory) {
-        return CLIFileExpansionContentsChecks.check(kind,records,io,directory,F26Assignment2Suite.attachmentKinds()).passed();
+        return CLIFileExpansionContentsChecks.check(kind,records,io,directory,A2ChecksConfiguration.attachmentKinds()).passed();
     }
     private static void require(boolean condition,String message) { if(!condition) throw new AssertionError(message); }
 }

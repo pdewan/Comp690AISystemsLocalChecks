@@ -1,12 +1,12 @@
 package gradingTools.comp690f26.assignment2._tests;
+import java.util.*;
+import java.nio.file.*;
+import eduAI.trace.processors.mutations.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
 
 import eduAI.trace.lib.StreamingMode;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.mutations.*;
-import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import java.nio.file.*;
-import java.util.*;
 
 
 /** Generates only realistic key collisions from correct snapshots. Both providers
@@ -14,8 +14,8 @@ import java.util.*;
  * metadata credit. No grading prerequisite or score is changed. */
 public final class MetadataCollisionFixturesTest {
     private static TraceFilesProcessor read(boolean cli, Path directory) {
-        var processor = cli ? F26Assignment2Suite.createTraceFilesProcessor(directory)
-            : F26Assignment1Suite.createTraceFilesProcessor(directory);
+        var processor = cli ? A2ChecksConfiguration.createTraceFilesProcessor(directory)
+            : A1ChecksConfiguration.createTraceFilesProcessor(directory);
         processor.processTraceFiles();
         return processor;
     }

@@ -1,20 +1,20 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment2.*;
-import gradingTools.comp690f26.common.AbstractTraceProcessorCheck;
-import gradingTools.comp690f26.common.properties.*;
-import java.nio.file.*;
 import java.util.*;
-import org.junit.runners.Suite;
+import java.nio.file.*;
+import gradingTools.comp690f26.common.properties.*;
+import gradingTools.comp690f26.assignment2.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import gradingTools.comp690f26.common.AbstractTraceProcessorCheck;
 
 /** Verifies dependency direction and independently configured property input policies. */
 public final class A2PropertyPolicyTest {
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply the correct fixture directory");
-        Path directory=Path.of(args[0]); F26Assignment2Suite.configureProperties();
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(directory); processor.processTraceFiles();
+        Path directory=Path.of(args[0]); A2ChecksConfiguration.configureProperties();
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(directory); processor.processTraceFiles();
         var checks = new Class<?>[]{PropertyHandlersRegistered.class, PropertyHandlerInstancesReused.class,
             PropertyHandlerInstancesSeparated.class, PropertyStoreIdentityConsistent.class,
             PropertyResultTypesConsistent.class, PropertyAlternativesConsistent.class,
@@ -39,8 +39,8 @@ public final class A2PropertyPolicyTest {
                 PropertyStoreConsistent.class))) throw new AssertionError("Expected inputs missing semantic prerequisites");
         for(var independent:List.of(PropertyHandlersRegistered.class,PropertyHandlerInstancesReused.class,PropertyHandlerInstancesSeparated.class))
             if(dependencies.contains(independent)) throw new AssertionError("Unrelated structural prerequisite: "+independent);
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
-        var policy=F26Assignment2Suite.propertyExpectations();
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
+        var policy=A2ChecksConfiguration.propertyExpectations();
         if(!policy.check(processor.getTraceRecords().values(),io).passed()) throw new AssertionError("Correct session rejected: "+policy.check(processor.getTraceRecords().values(),io));
         var changed=new ArrayList<>(policy.steps()); Collections.reverse(changed);
         if(new CLIPropertyExpectations(policy.descriptors(),changed,policy.requiredModels()).check(processor.getTraceRecords().values(),io).passed()) throw new AssertionError("Configured input order ignored");
@@ -52,7 +52,7 @@ public final class A2PropertyPolicyTest {
         var wrongInput=new CLIInteraction.Command(input.inputOrdinal(),input.lineNumber(),input.rawInput(),input.kind(),input.commandName(),input.argument(),input.propertyName(),values);
         entries.set(0,new CLIMixedIO.Entry(entry.number(),wrongInput,entry.attachments(),entry.output(),entry.chunks()));
         if(policy.check(processor.getTraceRecords().values(),new CLIMixedIO(entries)).passed()) throw new AssertionError("Consistent traces disagreeing with user input were accepted");
-        F26Assignment2Suite.setTraceDirectory(directory.toString());
+        A2ChecksConfiguration.setTraceDirectory(directory.toString());
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
         var root=grader.basics.junit.BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class).rootNode;
         var getters=grader.basics.junit.JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(PropertyGettersMatchSetters.class);

@@ -1,9 +1,15 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import grader.basics.junit.*;
-import grader.basics.testcase.PassFailJUnitTestCase;
-import gradingTools.comp690f26.assignment1.traceIntegritySuite.*;
+import java.util.*;
+import gradingTools.comp690f26.common.properties.*;
+import gradingTools.comp690f26.common.io.*;
+import gradingTools.comp690f26.common.commands.*;
+import gradingTools.comp690f26.assignment2.traceIntegritySuite.*;
 import gradingTools.comp690f26.assignment2.*;
+import gradingTools.comp690f26.assignment1.traceIntegritySuite.*;
+import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
+
+import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamObserverOutput;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIRequestSettingsMatch;
@@ -12,13 +18,8 @@ import gradingTools.comp690f26.assignment2.semanticsSuite.A2SemanticsSuite;
 import gradingTools.comp690f26.assignment2.separatedClassesSuite.A2SeparationOfConcernsSuite;
 import gradingTools.comp690f26.assignment2.suites.A2ExpectedContentSuite;
 import gradingTools.comp690f26.assignment2.suites.A2HandlerRegistrationSuite;
-import gradingTools.comp690f26.assignment2.traceIntegritySuite.*;
-import gradingTools.comp690f26.common.commands.*;
-import gradingTools.comp690f26.common.io.*;
 import gradingTools.comp690f26.common.io.A2InputOutputConsistencySuite;
 import gradingTools.comp690f26.common.io.A2OutputSyntaxSuite;
-import gradingTools.comp690f26.common.properties.*;
-import java.util.*;
 import org.junit.runners.Suite;
 
 
@@ -61,7 +62,7 @@ public final class A2ExpectedContentPrerequisitesTest {
     public static void main(String[] args) throws Exception {
         if (args.length != 1) throw new IllegalArgumentException("Supply correct A2 trace directory");
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
-        F26Assignment2Suite.setTraceDirectory(args[0]);
+        A2ChecksConfiguration.setTraceDirectory(args[0]);
         var root = BasicJUnitUtils.toGradableTree(F26Assignment2Suite.class).rootNode;
         double totalBefore = root.getComputedMaxScore(), regularBefore = root.getComputedRegularMaxScore();
         for (var suite : List.of(A2ExpectedContentSuite.class, A2SemanticsSuite.class,

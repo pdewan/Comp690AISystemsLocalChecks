@@ -1,15 +1,16 @@
 package gradingTools.comp690f26.assignment2._tests;
-
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
-import gradingTools.comp690f26.assignment1.contextHistorySuite.*;
-import gradingTools.comp690f26.assignment1.crossProviderSuite.*;
-import gradingTools.comp690f26.assignment1.physicalStructureSuite.*;
-import gradingTools.comp690f26.assignment1.streamingBehaviorSuite.*;
-import gradingTools.comp690f26.assignment1.traceIntegritySuite.*;
-import gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.*;
-import gradingTools.comp690f26.common.expectedRequestContentSuite.*;
 import java.util.*;
+import gradingTools.comp690f26.common.expectedRequestContentSuite.*;
+import gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.*;
+import gradingTools.comp690f26.assignment1.traceIntegritySuite.*;
+import gradingTools.comp690f26.assignment1.streamingBehaviorSuite.*;
+import gradingTools.comp690f26.assignment1.physicalStructureSuite.*;
+import gradingTools.comp690f26.assignment1.crossProviderSuite.*;
+import gradingTools.comp690f26.assignment1.contextHistorySuite.*;
+import grader.basics.junit.*;
+import gradingTools.comp690f26.assignment1.A1ChecksConfiguration;
+
+import gradingTools.comp690f26.assignment1.F26Assignment1Suite;
 
 
 /** Reproduces the documented entry points, not a full-suite run. Expected
@@ -56,11 +57,11 @@ public final class VisibleA1PrerequisitesTest {
     public static void main(String[] args) {
         if (args.length != 1) throw new IllegalArgumentException("Supply correct A1 trace directory");
         grader.basics.config.BasicExecutionSpecificationSelector.getBasicExecutionSpecification().setLogTestData(false);
-        F26Assignment1Suite.configureProperties(); F26Assignment1Suite.setTraceDirectory(args[0]);
+        A1ChecksConfiguration.configureProperties(); A1ChecksConfiguration.setTraceDirectory(args[0]);
         root = BasicJUnitUtils.toGradableTree(F26Assignment1Suite.class).rootNode;
         JUnitTestsEnvironment.clearCachedJUnitTestCases();
         for (String provider : List.of(eduAI.trace.processors.TraceProviderNames.GEMINI, eduAI.trace.processors.TraceProviderNames.OLLAMA))
-            if (!Arrays.asList(F26Assignment1Suite.expectedImagePrerequisites(provider)).contains(A1GenericRequestStructuresMatchAcrossProviders.class))
+            if (!Arrays.asList(A1ChecksConfiguration.expectedImagePrerequisites(provider)).contains(A1GenericRequestStructuresMatchAcrossProviders.class))
                 failures.add("Expected image finale lacks cross-provider request constraint: " + provider);
         run(AdaptiveExpectedRequestContentSuite.class);
         CONTENT_REQUIREMENTS.forEach(VisibleA1PrerequisitesTest::visible);

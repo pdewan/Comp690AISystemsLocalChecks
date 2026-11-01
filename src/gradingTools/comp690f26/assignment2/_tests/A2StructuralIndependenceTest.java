@@ -1,19 +1,20 @@
 package gradingTools.comp690f26.assignment2._tests;
+import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.*;
+import gradingTools.comp690f26.assignment2.physicalStructureSuite.*;
+import gradingTools.comp690f26.assignment2.interfacesSuite.*;
+import gradingTools.comp690f26.assignment2.*;
+import grader.basics.junit.*;
+import eduAI.trace.processors.cli.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.trace.TraceLine;
 import eduAI.trace.processors.TraceRecord;
-import eduAI.trace.processors.cli.*;
-import grader.basics.junit.*;
-import gradingTools.comp690f26.assignment2.*;
-import gradingTools.comp690f26.assignment2.interfacesSuite.*;
-import gradingTools.comp690f26.assignment2.physicalStructureSuite.*;
 import gradingTools.comp690f26.assignment2.separatedClassesSuite.A2CLISeparateFileExpanders;
 import gradingTools.comp690f26.assignment2.separatedClassesSuite.A2CLIStructureContract;
 import java.nio.file.Path;
-import java.util.*;
 
 
-import static eduAI.trace.cli.MinimalCLITrace.*;
 
 /** Structural evidence succeeds despite invalid displayed output. Missing
  * role evidence fails. Fresh grading executions retain full structural credit
@@ -21,8 +22,8 @@ import static eduAI.trace.cli.MinimalCLITrace.*;
 public final class A2StructuralIndependenceTest {
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply correct A2 directory");
-        F26Assignment2Suite.setTraceDirectory(args[0]);
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(Path.of(args[0]));
+        A2ChecksConfiguration.setTraceDirectory(args[0]);
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(Path.of(args[0]));
         processor.processTraceFiles();
         var records=processor.getTraceRecords().values().stream()
             .sorted(Comparator.comparingInt(TraceRecord::getTraceFileLineNumber)).toList();

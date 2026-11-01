@@ -1,24 +1,24 @@
 package gradingTools.comp690f26.assignment2._tests;
+import static eduAI.trace.cli.MinimalCLITrace.*;
+import java.util.*;
+import java.nio.file.*;
+import eduAI.trace.processors.cli.*;
+import eduAI.trace.processors.*;
+import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 
 import eduAI.trace.TraceLine;
 import eduAI.trace.cli.TraceDataPaths;
-import eduAI.trace.processors.*;
-import eduAI.trace.processors.cli.*;
-import gradingTools.comp690f26.assignment2.F26Assignment2Suite;
-import java.nio.file.*;
-import java.util.*;
 
-import static eduAI.trace.cli.MinimalCLITrace.*;
 
 /** Each view passes alone, requires its own evidence, and rejects its own corrupt
  * return without penalizing the other view. */
 public final class A2MessageViewsTest {
     public static void main(String[] args) throws Exception {
         if(args.length!=1) throw new IllegalArgumentException("Supply correct A2 fixture directory");
-        Path directory=Path.of(args[0]); F26Assignment2Suite.configureProperties();
-        var processor=F26Assignment2Suite.createTraceFilesProcessor(directory);processor.processTraceFiles();
+        Path directory=Path.of(args[0]); A2ChecksConfiguration.configureProperties();
+        var processor=A2ChecksConfiguration.createTraceFilesProcessor(directory);processor.processTraceFiles();
         var records=new ArrayList<>(processor.getTraceRecords().values());
-        var io=F26Assignment2Suite.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
+        var io=A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME)).interaction().orElseThrow();
         int mutations=0;
         for(var view:List.of(CLIMessageView.ORDINARY,CLIMessageView.SYSTEM)) {
             var other=view==CLIMessageView.ORDINARY?CLIMessageView.SYSTEM:CLIMessageView.ORDINARY;
@@ -62,7 +62,7 @@ public final class A2MessageViewsTest {
     }
     private static TraceCheckResult check(CLIMessageView view,Collection<TraceRecord> records,CLIMixedIO io,Path directory) throws Exception {
         var registry=new CLICommandResultCheckerRegistry();
-        registry.register(CLICommandNames.MESSAGES,new CLIMessagesCommandResultChecker(io,directory,view,F26Assignment2Suite.attachmentKinds()));
+        registry.register(CLICommandNames.MESSAGES,new CLIMessagesCommandResultChecker(io,directory,view,A2ChecksConfiguration.attachmentKinds()));
         return CLICommandResultChecks.check(records,io,registry,CLICommandNames.MESSAGES,view::includes);
     }
     private static void require(boolean value,String message) { if(!value) throw new AssertionError(message); }
