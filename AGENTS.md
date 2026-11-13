@@ -34,3 +34,7 @@
 - In the A2 UI, combine corresponding A1/A2 categories in flat A1A2 suites listing the existing atomic tests directly. Keep the original suites available separately; never nest them to create these groups.
 - Do not change GraderBasics or patch its jar to implement assignment-suite organization. Preserve original leaf weights and extra-credit flags using the assignment rubric.
 - The grading UI flattens nested suites and can lose nested suite-level points and extra-credit flags. Verify actual grading-tree scores and extra-credit status as well as leaf membership after reorganizing suites.
+
+## Grading JAR builds
+
+For building and publishing grading JARs, follow D:\dewan_backup\Java\EduCopilot\docs\Grading-Jar-Build.md. It records the dependency order, artifact-only verification, and agreed desktop/shared Downloads destinations.

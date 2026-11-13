@@ -8,10 +8,13 @@ import gradingTools.comp690f26.common.io.CLIOuterOutputSyntax;
 import util.annotations.Explanation;
 
 
-@Explanation("After validating native parameter translations, matches request settings to inputs. Requires requests exercising a model change, both streaming modes and a numeric-property change; missing exercise earns no credit. Attachment contents are not required.")
+@Explanation("After validating native parameter translations, matches native request settings to inputs without assuming generic property keys. Requires requests exercising a model change, both streaming modes and a numeric-property change; missing exercise earns no credit. Attachment contents are not required.")
 /**
- * First validates observed providers' parameter translations. A matching generic
- * setting cannot earn credit when its native translation is wrong.
+ * The existing provider prerequisites validate native/generic consistency.
+ * This check compares native values from the same shared reverse adapter with
+ * the settings derived from CLI input. A CLI temperature of 0.4 and native 0.4
+ * pass regardless of the generic key; native 0.9 fails. A generic-store error
+ * is rejected by the translation prerequisite, not by a duplicate lookup here.
  * Builds settings expectations directly from parsed inputs; attachment files and
  * prompt-content preparation are not prerequisites. Wrong numeric values fail even
  * when attachments are missing. Consistent

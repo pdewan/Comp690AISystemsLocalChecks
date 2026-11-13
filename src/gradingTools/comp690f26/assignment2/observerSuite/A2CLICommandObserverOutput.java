@@ -1,19 +1,17 @@
 package gradingTools.comp690f26.assignment2.observerSuite;
 
-import eduAI.trace.processors.cli.CLIArchitectureChecks;
-import gradingTools.comp690f26.assignment2.support.AbstractCLIArchitectureCheck;
-import gradingTools.comp690f26.common.io.CLIOuterOutputSyntax;
-
+import gradingTools.comp690f26.assignment2.support.AbstractObserverOutputCheck;
 
 /**
- * Matches command notifications to observer receipts by command number and result identity, and checks display counts and captured output.
- * A matching notification and receipt pass; a changed result/chunk identity,
- * missing receipt or mismatched captured output fails. Trace-integrity prerequisites establish the required events. Dispatcher API and
- * field structure are independent assessments; their failure does not block delivery credit.
- * The semantic rule also rejects a processing object used as the regular observer.
+ * Checks notification-to-receipt identity, ordering and completeness using traces only.
+ * Matching deliveries pass even if the I/O file is missing, malformed or from another run. A
+ * missing notification, changed received identity or missing receipt fails. No relevant
+ * delivery evidence earns no credit. Result contents and output-file agreement are
+ * separately scored.
  */
-@util.annotations.Explanation("Matches command notifications to observer receipts by command number and result identity, and checks display counts and captured output.")
+@util.annotations.Explanation("Checks traced notification delivery by identity, order and completeness without depending on the I/O file. Missing or inconsistent delivery evidence fails.")
 @util.annotations.MaxValue(gradingTools.comp690f26.common.GradingCheckWeights.OBSERVER_DELIVERY)
-public class A2CLICommandObserverOutput extends AbstractCLIArchitectureCheck {
-    @Override protected CLIArchitectureChecks.Check architectureCheck() { return CLIArchitectureChecks.Check.COMMAND_OUTPUT; }
+public class A2CLICommandObserverOutput extends AbstractObserverOutputCheck {
+    @Override protected boolean streaming() { return false; }
+    @Override protected boolean agreement() { return false; }
 }

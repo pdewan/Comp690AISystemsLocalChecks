@@ -26,7 +26,6 @@ public class A2TraceFixturesTest {
     }
     public static void main(String[] args) throws Exception {
         Path correct = Path.of(args[0]), broken = Path.of(args[1]);
-        A2ChecksConfiguration.configureProperties();
         Set<Class<?>> checks = new LinkedHashSet<>();
         collect(F26Assignment2Suite.class, checks);
         Method invoke = AbstractTraceProcessorCheck.class.getDeclaredMethod("check", TraceFilesProcessor.class);
@@ -65,6 +64,9 @@ public class A2TraceFixturesTest {
     }
 
     private static String failure(Path directory, Set<Class<?>> checks, Method invoke) throws Exception {
+        // Scoped evidence processors are created from this configuration, so it
+        // must follow every dataset, not just the initial correct fixture.
+        A2ChecksConfiguration.setTraceDirectory(directory.toString());
         var io = A2ChecksConfiguration.createInteractionsProcessor().process(directory.resolve(CLITraceInformation.INTERACTIONS_FILE_NAME));
         if (!io.succeeded()) throw new AssertionError("Unreadable fixture I/O: " + io.diagnostics());
         var processor = new NativeTraceFilesProcessor(directory.resolve(CLITraceInformation.TRACE_FILE_NAME));
@@ -126,6 +128,15 @@ public class A2TraceFixturesTest {
             String[] expected = Files.readString(requestExpectation).strip().split("\t", 2);
             var result = CLITraceExpectations.from(io.interaction().orElseThrow(), directory).check(
                     processor.getTraceRecords().values(), null, CLITraceExpectations.Check.valueOf(expected[0]));
+            if (CLITraceExpectations.Check.SETTINGS.name().equals(expected[0])) {
+                // Settings' existing JUnit prerequisite owns generic/native consistency.
+                // The direct fixture runner must exercise that prerequisite too.
+                var translation = processor.checkProviderGenericParameterMatches();
+                var messages = new ArrayList<>(translation.level3Messages()); messages.addAll(result.level3Messages());
+                var errors = new ArrayList<>(translation.level3ErrorMessages()); errors.addAll(result.level3ErrorMessages());
+                var codes = new ArrayList<>(translation.errors()); codes.addAll(result.errors());
+                result = new TraceCheckResult(codes, messages, errors);
+            }
             if (result.passed() || result.level3ErrorMessages().stream().noneMatch(e -> e.contains(expected[1])))
                 throw new AssertionError("Request mutation missed intended diagnostic: " + directory + " " + result);
             Files.writeString(directory.resolve("mutation-rejection.txt"), expected[0] + "\n"

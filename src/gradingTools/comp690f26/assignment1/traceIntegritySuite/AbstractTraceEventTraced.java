@@ -28,17 +28,12 @@ public abstract class AbstractTraceEventTraced
 		return new Class<?>[]{TraceProviderNamesConsistent.class};
 	}
 
-	@Override
-	protected String failureGuidance() {
-		return TraceIntegrityExplanations.forEvent(traceEvent());
-	}
-
-	@Override
-	protected String shortFailureMessage(TraceCheckResult aResult) {
-		return "Required "
-				+ traceEvent().name().toLowerCase()
-				+ " trace is missing or has invalid arguments. See trace output for details.";
-	}
+    /** Report the actual failed scope/arguments. An event elsewhere in the file
+     * must not be described as globally missing; present invalid events also fail. */
+    @Override
+    protected String failureGuidance() {
+        return "Inspect the reported provider/mode and argument diagnostics. An event in another partition does not establish the required evidence.";
+    }
 
 	protected Map<String, List<StreamingMode>> expectedProviderModes() {
 		return Map.of(GEMINI, BOTH_MODES, OLLAMA, BOTH_MODES);

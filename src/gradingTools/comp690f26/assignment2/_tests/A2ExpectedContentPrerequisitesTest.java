@@ -12,6 +12,8 @@ import gradingTools.comp690f26.assignment2.A2ChecksConfiguration;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamObserverOutput;
+import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandOutputAgreement;
+import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamOutputAgreement;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIRequestSettingsMatch;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLISemanticsContract;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2SemanticsSuite;
@@ -79,6 +81,7 @@ public final class A2ExpectedContentPrerequisitesTest {
         required.remove(gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.CompleteResponseCallbacksTraced.class);
         leaves(gradingTools.comp690f26.assignment1.responseTranslationSuite.ResponseTranslationSuite.class, required);
         required.addAll(List.of(A2CLICommandObserverOutput.class,A2CLIStreamObserverOutput.class,
+            A2CLICommandOutputAgreement.class,A2CLIStreamOutputAgreement.class,
             gradingTools.comp690f26.assignment1.responseTranslationSuite.GeminiResponseMatchesGenericResponse.class,
             gradingTools.comp690f26.assignment1.responseTranslationSuite.OllamaResponseMatchesGenericResponse.class,
             gradingTools.comp690f26.assignment1.traceIntegritySuite.extra.StreamingChunksAccumulatedTraced.class,
@@ -126,6 +129,8 @@ public final class A2ExpectedContentPrerequisitesTest {
         requiredFailureBlocks(CLIMessagesOutputSyntax.class, AdaptiveExpectedCommandInputs.class);
         requiredFailureBlocks(A2CLISemanticsContract.class, AdaptiveExpectedCommandInputs.class);
         requiredFailureBlocks(A2CLIStreamObserverOutput.class, AdaptiveExpectedCommandInputs.class);
+        requiredFailureBlocks(A2CLICommandOutputAgreement.class, AdaptiveExpectedCommandInputs.class);
+        requiredFailureBlocks(A2CLIStreamOutputAgreement.class, AdaptiveExpectedCommandInputs.class);
         requiredFailureBlocks(RequestsTraced.class, gradingTools.comp690f26.assignment1.requestTranslationSuite.GeminiTextualContextWindowMatchesGenericContextWindow.class);
         requiredFailureBlocks(gradingTools.comp690f26.assignment1.responseTranslationSuite.GeminiMetadataMatchesGenericMetadata.class,
             gradingTools.comp690f26.common.expectedRequestContentSuite.AdaptiveGeminiExpectedPromptsInProviderRequests.class);

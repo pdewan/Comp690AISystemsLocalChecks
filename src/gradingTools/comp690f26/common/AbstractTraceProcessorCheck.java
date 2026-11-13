@@ -25,7 +25,11 @@ public abstract class AbstractTraceProcessorCheck
 	}
 
 	protected String shortFailureMessage(TraceCheckResult aResult) {
-		return getClass().getSimpleName() + " failed.";
+		return getClass().getSimpleName() + " failed. "
+				+ (aResult.level3ErrorMessages().isEmpty()
+						? "Reported trace errors: " + aResult.errors()
+						: "First reported issue: " + aResult.level3ErrorMessages().getFirst())
+				+ " See the local-check console output for all diagnostics.";
 	}
 
 	protected Class<?>[] additionalPrecedingTests() {

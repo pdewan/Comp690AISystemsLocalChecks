@@ -18,6 +18,7 @@ public final class GradingCheckWeights {
     public static final int SINGLE_INTERFACE = 5;
     public static final int INTERFACE_FIELDS = 10;
     public static final int METHOD_CONTRACT = 2;
+    public static final double CONSTRUCTOR_ONLY_REGISTRATION_FRACTION = 0.5;
     public static final int PROPERTY_DESCRIPTION = 5;
     public static final int VALUE_CONSISTENCY = 5;
     public static final int STORE_CONSISTENCY = 5;
@@ -27,7 +28,8 @@ public final class GradingCheckWeights {
     public static final int COMMAND_RESULT_CONTAINMENT = 10;
     public static final int PARAMETER_VALUES = 20;
     public static final int ATTACHMENT_CONTENT = 10;
-    public static final int OBSERVER_DELIVERY = 10;
+    public static final int OBSERVER_DELIVERY = 5;
+    public static final int OBSERVER_OUTPUT_AGREEMENT = 5;
     public static final int HISTORY_RETENTION = 10;
     public static final int REQUIRED_INPUT = 30;
     public static final int STREAM_SETTING_CONSISTENCY = 15;

@@ -8,7 +8,8 @@ import eduAI.trace.processors.cli.CLIPropertyConsistencyChecks;
  * path must contain all observed selections. The same path must be available in
  * the other property results. Repeated choices for a property must agree, and each
  * selected value must belong to its nonempty choices. Empty choices are allowed
- * for properties with no listed alternatives.
+ * for properties with no listed alternatives; an explicit null is also allowed
+ * for unrestricted properties. Missing fields and null boolean/model choices fail.
  *
  * Success example: current_models selects modelA and later modelB; both results
  * contain choices [modelA, modelB], and other results expose that same choices

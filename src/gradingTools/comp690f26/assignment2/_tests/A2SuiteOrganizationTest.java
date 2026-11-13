@@ -34,7 +34,9 @@ public final class A2SuiteOrganizationTest {
             gradingTools.comp690f26.assignment1.commonInterfacesSuite.A1CommonInterfacesSuite.class,
             gradingTools.comp690f26.assignment2.commonInterfacesSuite.A2CommonInterfacesSuite.class,
             A2HandlerRegistrationSuite.class,A1A2ProjectClassesSuite.class,A1A2TracedClassesSuite.class)) separation.addAll(leaves(group));
-        var delivery=Set.of(A2CLICommandObserverOutput.class,A2CLIStreamObserverOutput.class);
+        var delivery=Set.of(A2CLICommandObserverOutput.class,A2CLIStreamObserverOutput.class,
+            gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandOutputAgreement.class,
+            gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamOutputAgreement.class);
         var observerStructure=leaves(A2ObserverObservableSuite.class); observerStructure.removeAll(delivery);separation.addAll(observerStructure);
         var semantics=leaves(A2OriginalSemanticsSuite.class);semantics.addAll(leaves(A2OutputSyntaxSuite.class));semantics.addAll(delivery);
         require(separation.equals(leaves(A1A2SeparationOfConcernsSuite.class)),"Wrong separation membership");

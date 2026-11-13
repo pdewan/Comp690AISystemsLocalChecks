@@ -66,9 +66,18 @@ public abstract class AbstractA2StructureCheck extends PassFailJUnitTestCase {
         return List.copyOf(results);
     }
     @Override public TestCaseResult test(Project project, boolean interactive) throws NotAutomatableException, NotGradableException {
+        if (rule() == Rule.DISPATCHER_OBSERVER_METHODS || rule() == Rule.STREAM_OBSERVER_METHODS) {
+            var registration = rule() == Rule.DISPATCHER_OBSERVER_METHODS
+                ? RoleStructureChecks.observableObserverMethods(classes(CLICommandDispatcherExistsInProject.class), classes(CLICommandOutputObserverExistsInProject.class))
+                : RoleStructureChecks.observableObserverMethods(classes(CLIStreamObservableExistsInProject.class), classes(CLIStreamOutputObserverExistsInProject.class));
+            if (!registration.errors().isEmpty()) return fail(String.join("; ", registration.errors()));
+            return registration.constructorOnly()
+                ? partialPass(GradingCheckWeights.CONSTRUCTOR_ONLY_REGISTRATION_FRACTION, String.join("; ", registration.limitations()))
+                : pass();
+        }
         Set<Class<?>> projectClasses = new HashSet<>();
-        for (Object value : BasicProjectIntrospection.getAllClasses(project))
-            if (value instanceof Class<?> type) projectClasses.add(type);
+        for (var description : project.getClassesManager().get().getClassDescriptions())
+            projectClasses.add(description.getJavaClass());
         List<String> errors = switch (rule()) {
             case COMMAND_INTERFACE -> RoleStructureChecks.commonOperationInterface(classes(COMMANDS));
             case PROPERTY_INTERFACE -> RoleStructureChecks.commonOperationInterface(classes(CLIPropertyHandlersExistInProject.class));
@@ -78,8 +87,7 @@ public abstract class AbstractA2StructureCheck extends PassFailJUnitTestCase {
             case OBSERVER_NOTIFICATION_METHODS -> RoleStructureChecks.observerNotificationMethods(classes(CLICommandOutputObserverExistsInProject.class, CLIStreamOutputObserverExistsInProject.class));
             case COMMAND_REGISTRY -> RoleStructureChecks.handlerStorage(classes(CommandHandlerRegistryExistsInProject.class), classes(COMMANDS), projectClasses);
             case PROPERTY_REGISTRY -> RoleStructureChecks.handlerStorage(classes(CLIPropertyHandlerRegistryExistsInProject.class), classes(CLIPropertyHandlersExistInProject.class), projectClasses);
-            case DISPATCHER_OBSERVER_METHODS -> RoleStructureChecks.observableObserverMethods(classes(CLICommandDispatcherExistsInProject.class), classes(CLICommandOutputObserverExistsInProject.class));
-            case STREAM_OBSERVER_METHODS -> RoleStructureChecks.observableObserverMethods(classes(CLIStreamObservableExistsInProject.class), classes(CLIStreamOutputObserverExistsInProject.class));
+            case DISPATCHER_OBSERVER_METHODS, STREAM_OBSERVER_METHODS -> throw new IllegalStateException("Registration rules are graded separately above");
             case STREAM_OBSERVERS -> RoleStructureChecks.observerStorage(classes(CLIStreamObservableExistsInProject.class), classes(CLIStreamOutputObserverExistsInProject.class), projectClasses);
             case DISPATCHER_OBSERVERS -> RoleStructureChecks.observerStorage(classes(CLICommandDispatcherExistsInProject.class), classes(CLICommandOutputObserverExistsInProject.class), projectClasses);
         };

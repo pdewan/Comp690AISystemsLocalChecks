@@ -16,6 +16,8 @@ import gradingTools.comp690f26.assignment1.streamingBehaviorSuite.GeminiMergedSt
 import gradingTools.comp690f26.assignment1.streamingBehaviorSuite.OllamaMergedStreamingResponseInNextContextWindow;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamObserverOutput;
+import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandOutputAgreement;
+import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamOutputAgreement;
 import gradingTools.comp690f26.assignment2.parameterHistorySuite.A2CLIParameterHistorySnapshotsPreserved;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIImageFileExpansionContentsMatch;
 import gradingTools.comp690f26.assignment2.semanticsSuite.A2CLIRequestSettingsMatch;
@@ -95,6 +97,8 @@ public final class A2ChecksConfiguration {
                         AdaptiveMessagesOutputMatches.class,
                         AdaptiveSystemMessagesOutputMatches.class,
                         A2CLITextFileExpansionContentsMatch.class, A2CLIImageFileExpansionContentsMatch.class,
+                        A2CLICommandOutputAgreement.class,
+                        A2CLIStreamOutputAgreement.class,
                         A2CLICommandObserverOutput.class, A2CLIStreamObserverOutput.class))), traceDirectory);
 		
 	}

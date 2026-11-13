@@ -57,6 +57,21 @@ public final class A2StructureChecksTest {
     public static class WrongMethodObservable { public void arbitrary(Handler listener) { } }
     public static class MarkerMethodObservable { public void arbitrary(Marker listener) { } }
     public static class ConstructorObservable { public ConstructorObservable(Observer listener) { } }
+    public static class BothRegistrationObservable extends MethodObservable {
+        public BothRegistrationObservable(Observer listener) { }
+    }
+    public static class StoredConstructorObservable {
+        private final Observer listener;
+        public StoredConstructorObservable(String name, Observer listener) { this.listener = listener; }
+    }
+    public static class PrivateConstructorObservable { private PrivateConstructorObservable(Observer listener) { } }
+    public static class ConcreteConstructorObservable { public ConcreteConstructorObservable(Display listener) { } }
+    public static class ObjectConstructorObservable { public ObjectConstructorObservable(Object listener) { } }
+    public static class WrongConstructorObservable { public WrongConstructorObservable(Handler listener) { } }
+    public static class MarkerConstructorObservable { public MarkerConstructorObservable(Marker listener) { } }
+    public static class ChildConstructorObservable extends ConstructorObservable {
+        public ChildConstructorObservable() { super(null); }
+    }
     private static int assertions;
     private static int negatives;
 
@@ -69,19 +84,36 @@ public final class A2StructureChecksTest {
         for (Class<?> invalid : List.of(MarkerOnly.class, StaticDisplay.class, NoArgumentDisplay.class, ReturningDisplay.class))
             expect(RoleStructureChecks.observerNotificationMethods(List.of(invalid)), false, "invalid notification " + invalid.getSimpleName());
         expect(RoleStructureChecks.observerNotificationMethods(List.of()), false, "no observer evidence");
-        for (Class<?> valid : List.of(MethodObservable.class, InheritedMethodObservable.class, DefaultMethodObservable.class))
+        for (Class<?> valid : List.of(MethodObservable.class, InheritedMethodObservable.class, DefaultMethodObservable.class,
+                ConstructorObservable.class, StoredConstructorObservable.class))
             expect(RoleStructureChecks.observableObserverMethods(List.of(valid), List.of(Display.class)), true,
                 "inherited/parent/default notification parameter " + valid.getSimpleName());
         for (Class<?> invalid : List.of(Empty.class, StaticMethodObservable.class, PrivateMethodObservable.class,
                 ProtectedMethodObservable.class, ConcreteMethodObservable.class, ObjectMethodObservable.class,
-                WrongMethodObservable.class, ConstructorObservable.class))
+                WrongMethodObservable.class, PrivateConstructorObservable.class, ConcreteConstructorObservable.class,
+                ObjectConstructorObservable.class, WrongConstructorObservable.class, ChildConstructorObservable.class))
             expect(RoleStructureChecks.observableObserverMethods(List.of(invalid), List.of(Display.class)), false,
                 "invalid observer method " + invalid.getSimpleName());
         expect(RoleStructureChecks.observableObserverMethods(List.of(MarkerMethodObservable.class), List.of(MarkerOnly.class)), false, "marker is not notification contract");
+        expect(RoleStructureChecks.observableObserverMethods(List.of(MarkerConstructorObservable.class), List.of(MarkerOnly.class)), false, "constructor marker is not notification contract");
         expect(RoleStructureChecks.observableObserverMethods(List.of(), List.of(Display.class)), false, "missing observable evidence");
         expect(RoleStructureChecks.observableObserverMethods(List.of(MethodObservable.class), List.of()), false, "missing observer evidence");
         expect(RoleStructureChecks.observableObserverMethods(List.of(MethodObservable.class, Empty.class), List.of(Display.class)), false, "every observable must offer method");
         expect(RoleStructureChecks.observableObserverMethods(List.of(MethodObservable.class), List.of(Display.class, MarkerOnly.class)), false, "every observer must be accepted");
+        for (Class<?> type : List.of(ConstructorObservable.class, StoredConstructorObservable.class)) {
+            var registration = RoleStructureChecks.observableObserverMethods(List.of(type), List.of(Display.class));
+            if (!registration.constructorOnly() || !registration.limitations().getFirst().contains("construction time"))
+                throw new AssertionError("Constructor-only registration must have a clear partial-credit diagnostic");
+        }
+        for (Class<?> type : List.of(MethodObservable.class, BothRegistrationObservable.class)) {
+            var registration = RoleStructureChecks.observableObserverMethods(List.of(type), List.of(Display.class));
+            if (!registration.errors().isEmpty() || registration.constructorOnly())
+                throw new AssertionError("Instance registration must receive full credit");
+        }
+        var incomplete = RoleStructureChecks.observableObserverMethods(
+            List.of(ConstructorObservable.class, Empty.class), List.of(Display.class));
+        if (incomplete.errors().isEmpty() || incomplete.constructorOnly())
+            throw new AssertionError("A missing API must not earn constructor-only credit");
         List<Class<?>> handlers = List.of(First.class, Second.class);
         Set<Class<?>> project = new HashSet<>(Arrays.asList(A2StructureChecksTest.class.getDeclaredClasses()));
         expect(RoleStructureChecks.commonOperationInterface(handlers), true, "common inherited handler interface");
@@ -103,6 +135,11 @@ public final class A2StructureChecksTest {
         for (Class<?> invalid : List.of(Empty.class, RawRegistry.class, WrongRegistry.class, StaticRegistry.class))
             expect(RoleStructureChecks.handlerStorage(List.of(invalid), handlers, project), false, "invalid registry " + invalid.getSimpleName());
         expect(RoleStructureChecks.observerStorage(List.of(Observable.class), List.of(Display.class), project), true, "observer parent interface storage");
+        // Receiving an argument does not establish storage or actual notification.
+        expect(RoleStructureChecks.observerStorage(List.of(ConstructorObservable.class), List.of(Display.class), project), false, "constructor discards observer");
+        expect(RoleStructureChecks.observerStorage(List.of(StoredConstructorObservable.class), List.of(Display.class), project), true, "constructor stores observer");
+        expect(RoleStructureChecks.observerStorage(List.of(MethodObservable.class), List.of(Display.class), project), false, "registration method discards observer");
+        expect(RoleStructureChecks.observableObserverMethods(List.of(Observable.class), List.of(Display.class)), false, "storage alone does not establish registration API");
         expect(RoleStructureChecks.observerStorage(List.of(Empty.class), List.of(Display.class), project), false, "missing observer storage");
         expect(RoleStructureChecks.observerStorage(List.of(StaticObservable.class), List.of(Display.class), project), false, "static-only observer storage");
         var inspect = AbstractTaggedClassPhysicalStructuresUseInterfaces.class.getDeclaredMethod("inspectPhysicalStructure",
@@ -114,6 +151,9 @@ public final class A2StructureChecksTest {
             expect(errors, root == InterfaceHolder.class, "concrete tagged collaborator " + root.getSimpleName());
         }
         System.out.println("A2StructureChecksTest passed: " + assertions + " cases, " + negatives + " structural mutations rejected");
+    }
+    private static void expect(RoleStructureChecks.ObserverRegistration result, boolean pass, String label) {
+        expect(result.errors(), pass, label);
     }
     private static void expect(List<String> errors, boolean pass, String label) {
         assertions++;

@@ -90,27 +90,39 @@ public final class RoleStructureChecks {
     }
 
     /**
-     * Looks for a public instance method accepting a notification interface of each
+     * Looks for a public constructor or instance method accepting a notification interface of each
      * observed class. Names, return types and additional parameters are unrestricted.
-     * This proves API shape, not that the method actually registers its argument.
+     * This proves API shape, not storage or notification of the argument.
      */
-    public static List<String> observableObserverMethods(List<Class<?>> observables, List<Class<?>> observers) {
-        if (observables.isEmpty()) return List.of("No observable classes supplied by project prerequisites");
-        if (observers.isEmpty()) return List.of("No observer classes supplied by project prerequisites");
-        List<String> failures = new ArrayList<>();
+    public record ObserverRegistration(List<String> errors, List<String> limitations) {
+        public boolean constructorOnly() { return errors.isEmpty() && !limitations.isEmpty(); }
+    }
+
+    public static ObserverRegistration observableObserverMethods(List<Class<?>> observables, List<Class<?>> observers) {
+        if (observables.isEmpty()) return new ObserverRegistration(List.of("No observable classes supplied by project prerequisites"), List.of());
+        if (observers.isEmpty()) return new ObserverRegistration(List.of("No observer classes supplied by project prerequisites"), List.of());
+        List<String> failures = new ArrayList<>(), limitations = new ArrayList<>();
         for (Class<?> observer : observers) {
             var interfaces = InterfaceStructure.allInterfaces(observer);
             interfaces.removeIf(type -> !hasNotificationMethod(type));
             for (Class<?> observable : observables) {
-                boolean found = Arrays.stream(observable.getMethods())
+                boolean methodFound = Arrays.stream(observable.getMethods())
                     .filter(method -> !Modifier.isStatic(method.getModifiers()))
                     .flatMap(method -> Arrays.stream(method.getParameterTypes()))
                     .anyMatch(interfaces::contains);
-                if (!found) failures.add("No public instance method on " + observable.getName()
+                if (methodFound) continue;
+                boolean constructorFound = Arrays.stream(observable.getConstructors())
+                    .flatMap(constructor -> Arrays.stream(constructor.getParameterTypes()))
+                    .anyMatch(interfaces::contains);
+                if (constructorFound) limitations.add("Constructor-only observer registration on " + observable.getName()
+                    + " limits registration to observers known at observable construction time. "
+                    + "Add a public instance registration method accepting the notification interface of "
+                    + observer.getName() + " to allow registration after construction and earn full credit.");
+                else failures.add("No public constructor or instance registration method on " + observable.getName()
                     + " accepts a notification interface of " + observer.getName() + ": " + interfaces);
             }
         }
-        return failures;
+        return new ObserverRegistration(List.copyOf(failures), List.copyOf(limitations));
     }
 
     public static List<String> handlerStorage(List<Class<?>> registries, List<Class<?>> handlers, Set<Class<?>> project) {

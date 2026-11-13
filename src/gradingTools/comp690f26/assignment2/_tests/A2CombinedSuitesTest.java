@@ -39,7 +39,7 @@ public final class A2CombinedSuitesTest {
                 System.out.println("Changed: "+entry.getKey().getSimpleName()+" "+entry.getValue()+" -> "+after.get(entry.getKey()));
             throw new AssertionError("Combined layout changed membership, scores or extra credit");
         }
-        if(after.size()!=217 || combined.getComputedRegularMaxScore()!=1018 || combined.getComputedMaxScore()!=1069)
+        if(after.size()!=219 || combined.getComputedRegularMaxScore()!=1018 || combined.getComputedMaxScore()!=1069)
             throw new AssertionError("Assignment rubric totals changed");
         long groups=combined.children().stream().filter(n->n.getJUnitClass().getPackageName().equals("gradingTools.comp690f26.combined")).count();
         if(groups!=5) throw new AssertionError("Expected five combined groups");
@@ -59,6 +59,6 @@ public final class A2CombinedSuitesTest {
         for(var group:combined.children()) if(group.getJUnitClass().getPackageName().equals("gradingTools.comp690f26.combined"))
             for(var child:((GradableJUnitSuite)group).children()) if(child instanceof GradableJUnitSuite || child.getJUnitClass().isAnnotationPresent(org.junit.runners.Suite.SuiteClasses.class))
                 throw new AssertionError("Combined suite contains a nested suite: "+group.getJUnitClass());
-        System.out.println("A2CombinedSuitesTest passed: 5 groups, 217 unique checks; project checks two points each, other weights unchanged; 1018 regular + 51 extra");
+        System.out.println("A2CombinedSuitesTest passed: 5 groups, 219 unique checks; project checks two points each, other weights unchanged; 1018 regular + 51 extra");
     }
 }

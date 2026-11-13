@@ -30,7 +30,8 @@ public final class A2ObserverPrerequisitesTest {
         }
         JUnitTestsEnvironment.getAndPossiblyRunGradableJUnitTest(gradingTools.comp690f26.common.commands.AdaptiveExpectedCommandInputs.class);
         for(var type:List.of(A2DispatcherObserverTypes.class,A2StreamObservableObserverTypes.class,
-                A2ObserverNotificationMethods.class,ObserverRolesSeparated.class))
+                A2ObserverNotificationMethods.class,A2DispatcherObserverMethods.class,
+                A2StreamObservableObserverMethods.class,ObserverRolesSeparated.class))
             if(JUnitTestsEnvironment.getPassFailJUnitTest(type)!=null)
                 throw new AssertionError("Independent design assessment ran through delivery/input checking: "+type);
         System.out.println("A2ObserverPrerequisitesTest passed: event prerequisites run; API/storage/separation stay independent");

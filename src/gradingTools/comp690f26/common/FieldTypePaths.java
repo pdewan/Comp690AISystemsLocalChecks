@@ -3,7 +3,10 @@ package gradingTools.comp690f26.common;
 import java.lang.reflect.*;
 import java.util.*;
 
-/** Declared instance-field traversal shared with A1, including generic arguments and arrays. */
+/** Instance-field traversal, including unique project implementations of interfaces.
+ * This establishes a static type path, not the runtime value of a field. Multiple
+ * concrete implementations remain unresolved; unrelated classes are never searched.
+ * The visited set bounds traversal even when fields or implementations form cycles. */
 public final class FieldTypePaths {
     private FieldTypePaths() { }
 	public static String findRequiredTypePath(
@@ -14,6 +17,18 @@ public final class FieldTypePaths {
 			String aPath) {
 		if (aCurrentClass == null || !aVisited.add(aCurrentClass)) {
 			return null;
+		}
+		if (aCurrentClass.isInterface()) {
+			Class<?> implementation = null;
+			for (Class<?> candidate : aProjectClasses) {
+				if (candidate.isInterface() || Modifier.isAbstract(candidate.getModifiers())
+						|| !aCurrentClass.isAssignableFrom(candidate)) continue;
+				if (implementation != null) return null;
+				implementation = candidate;
+			}
+			return implementation == null ? null : findRequiredTypePath(
+					implementation, aRequiredType, aProjectClasses, aVisited,
+					aPath + " -> " + implementation.getName());
 		}
 
 		for (Class<?> current = aCurrentClass;
@@ -39,7 +54,7 @@ public final class FieldTypePaths {
 				if (fieldType.isArray()) {
 					fieldType = fieldType.getComponentType();
 				}
-				if (aProjectClasses.contains(fieldType)) {
+				if (fieldType.isInterface() || aProjectClasses.contains(fieldType)) {
 					String nestedPath =
 							findRequiredTypePath(
 									fieldType,

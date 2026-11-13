@@ -9,7 +9,11 @@ import java.util.List;
 import util.annotations.Explanation;
 import util.annotations.MaxValue;
 
-@Explanation("After handle evidence and project lookup, follows field types to the native client.")
+/** Follows instance fields and uniquely implemented project interfaces to the native client.
+ * A transport interface with one implementation holding that client passes. Missing clients,
+ * unrelated implementations, and ambiguous static paths earn no credit unless the handle
+ * trace supplies an actual runtime path. This does not execute student code. */
+@Explanation("Finds the native client through instance fields, unique project interface implementations, or a traced runtime path; ambiguous static paths alone earn no credit.")
 public class OllamaServerHandleAdapterHasRequiredTypes
 		extends AbstractClassHasRequiredTypes {
 	private static final Class[] PRECEDING_TESTS = {

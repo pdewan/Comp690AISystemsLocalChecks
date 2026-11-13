@@ -2,18 +2,10 @@ package gradingTools.comp690f26.assignment1.physicalStructureSuite;
 
 import grader.basics.junit.NotAutomatableException;
 import grader.basics.junit.TestCaseResult;
-import grader.basics.project.BasicProjectIntrospection;
 import grader.basics.project.NotGradableException;
 import grader.basics.project.Project;
 import grader.basics.testcase.PassFailJUnitTestCase;
 import gradingTools.comp690f26.common.AbstractClassExistsInProject;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,11 +26,10 @@ public abstract class AbstractClassHasRequiredTypes
 						getLastPrecedingTestInstance())
 						.getTracedClass();
 		Set<Class<?>> projectClasses = new HashSet<>();
-		for (Object projectClass :
-				BasicProjectIntrospection.getAllClasses(aProject)) {
-			if (projectClass instanceof Class<?> type) {
-				projectClasses.add(type);
-			}
+		// ClassDescription describes a submitted class. Its own getClass() is
+		// framework metadata; getJavaClass() supplies the actual field owner.
+		for (var description : aProject.getClassesManager().get().getClassDescriptions()) {
+			projectClasses.add(description.getJavaClass());
 		}
 		List<String> missingTypes = new ArrayList<>();
 

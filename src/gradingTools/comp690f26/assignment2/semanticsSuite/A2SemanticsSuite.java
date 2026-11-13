@@ -2,6 +2,8 @@ package gradingTools.comp690f26.assignment2.semanticsSuite;
 
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandObserverOutput;
 import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamObserverOutput;
+import gradingTools.comp690f26.assignment2.observerSuite.A2CLICommandOutputAgreement;
+import gradingTools.comp690f26.assignment2.observerSuite.A2CLIStreamOutputAgreement;
 import gradingTools.comp690f26.assignment2.parameterHistorySuite.A2CLIParameterHistorySnapshotsPreserved;
 import gradingTools.comp690f26.common.commands.AdaptiveOrdinaryMessagesCommandResultsMatch;
 import gradingTools.comp690f26.common.commands.AdaptivePromptCommandResultsMatch;
@@ -53,6 +55,8 @@ import util.annotations.MaxValue;
     CLITranscriptOutputSyntax.class,
     CLIMessagesOutputSyntax.class,
     A2CLIStreamObserverOutput.class,
+    A2CLICommandOutputAgreement.class,
+    A2CLIStreamOutputAgreement.class,
     A2CLICommandObserverOutput.class
 })
 public class A2SemanticsSuite { }

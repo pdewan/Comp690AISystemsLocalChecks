@@ -38,8 +38,8 @@ public class GeminiServerHandleAdapterFoundInTrace extends PassFailJUnitTestCase
 		}
 		if (!traceCheckResult.passed()) {
 			String aMessage =
-					"Expected class not found in trace: "
-							+ Assignment1Tags.GEMINI_SERVER_HANDLE_ADAPTER
+					gradingTools.comp690f26.common.AbstractClassFoundInTrace.missingRoleMessage(
+                                Assignment1Tags.GEMINI_SERVER_HANDLE_ADAPTER, traceFilesProcessor)
 							+ " "
 							+ traceCheckResult.errors();
 			Tracer.error(aMessage);

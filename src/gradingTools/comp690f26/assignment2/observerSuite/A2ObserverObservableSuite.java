@@ -13,7 +13,8 @@ import util.annotations.Explanation;
  * shared processing/display identities or mismatched deliveries fail. Missing
  * prerequisite evidence blocks dependent checks. Reflection checks API shape;
  * traces and captured output establish runtime consistency. Field-type checks
- * belong to A2PhysicalStructureSuite and remain delivery prerequisites.
+ * belong to A2PhysicalStructureSuite and are independently scored.
+ * Delivery and output agreement each earn five points per output kind.
  */
 @Explanation("Checks command and stream observer contracts, observable methods, separation and delivery.")
 @RunWith(Suite.class)
@@ -22,6 +23,8 @@ import util.annotations.Explanation;
     A2DispatcherObserverMethods.class,
     A2StreamObservableObserverMethods.class,
     ObserverRolesSeparated.class,
+    A2CLICommandOutputAgreement.class,
+    A2CLIStreamOutputAgreement.class,
     A2CLICommandObserverOutput.class,
     A2CLIStreamObserverOutput.class
 })
